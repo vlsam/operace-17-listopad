@@ -2,7 +2,7 @@
 (function () {
   "use strict";
   const $ = (id) => document.getElementById(id);
-  const POHLED_KEY = "bojovka.pohled", TEMA_KEY = "bojovka.tema", REZIM_KEY = "bojovka.rezim";
+  const POHLED_KEY = "bojovka.pohled", TEMA_KEY = "bojovka.tema";
   const DATA_VERZE = 1; // verze struktury uložených dat; při změně struktury doplň migraci v migruj()
   const VSECH = STANOVISTE.length;
   const SVG = (n) => '<svg class="ic" aria-hidden="true"><use href="#i-' + n + '"/></svg>';
@@ -11,10 +11,7 @@
   const lsGet = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
   const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) { /* plné úložiště */ } };
 
-  // ---------- režim: ostrá hra / cvičná hra se 2 stanovišti (oddělený stav i přepsané souřadnice) ----------
-  let cvic = lsGet(REZIM_KEY) === "cvicna";
-  const kStav = () => (cvic ? "bojovka.stav.cvicna" : "bojovka.stav");
-  const kPrepis = () => (cvic ? "bojovka.prepis.cvicna" : "bojovka.prepis");
+  const kStav = () => "bojovka.stav", kPrepis = () => "bojovka.prepis";
 
   // ---------- stav hry (localStorage, přežije aktualizaci aplikace) ----------
   function novyStav() {
@@ -44,13 +41,10 @@
 
   const hotove = (s) => s.stav === "solved" || s.stav === "skipped";
   const ef = (s) => (prepis[s.id] ? Object.assign({}, s, { lat: prepis[s.id].lat, lng: prepis[s.id].lng, prepsano: true }) : s);
-  const CVIC_N = CONFIG.CVICNA_STANOVISTE.length;
-  // základ stanoviště: ve cvičné hře úkol z podkladu, ale název a souřadnice z config.js (CVICNA_STANOVISTE)
-  const zaklad = (s) => { const cv = cvic && CONFIG.CVICNA_STANOVISTE.find((x) => x.id === s.id); return cv ? Object.assign({}, s, { nazev: cv.nazev, lat: cv.lat, lng: cv.lng }) : s; };
-  const sts = () => (cvic ? STANOVISTE.slice(0, CVIC_N) : STANOVISTE).map((s) => ef(zaklad(s)));
-  const pocet = () => (cvic ? CVIC_N : VSECH);
-  const radarM = () => (cvic ? (+lsGet("bojovka.cvicRadar") || CONFIG.RADAR_CVIC_M) : CONFIG.RADAR_M);
-  const dej = (id) => { const s = STANOVISTE.find((x) => x.id === id); return s ? ef(zaklad(s)) : null; };
+  const sts = () => STANOVISTE.map(ef);
+  const pocet = () => VSECH;
+  const radarM = () => +lsGet("bojovka.radar") || CONFIG.RADAR_M; // dosah radaru: výchozí z config.js, učitel přepíná 150 / 400 / 800 m
+  const dej = (id) => { const s = STANOVISTE.find((x) => x.id === id); return s ? ef(s) : null; };
   const nehotove = () => sts().filter((s) => !hotove(stav.stanoviste[s.id]));
   const aktualni = () => nehotove()[0] || null; // doporučené (další v trase)
   const aktivni = () => sts().find((s) => stav.stanoviste[s.id].stav === "unlocked") || null; // odemčené = otevřený úkol
@@ -113,7 +107,6 @@
     });
     lsSet(POHLED_KEY, ["hra", "cesta", "sbirka", "tym"].includes(p) ? p : "home");
     $("navT").textContent = TITULY[p] || "";
-    $("cvicBanner").hidden = !cvic || jeHome;
     if (jeHome) $("btnZacit").textContent = stav.zacatek ? "Pokračovat ve hře" : "Začít";
     if (p === "hra") { spustGps(); spustKompas(false); renderHra(); } else setSheet(null);
     if (p === "cesta") renderCesta();
@@ -234,7 +227,7 @@
     cilId = nej.s.id;
     return nej.s;
   }
-  const popisCile = (s) => "Stanoviště " + s.id + (cvic ? ": " + s.nazev : ""); // názvy míst jen ve cvičné hře (v ostré hře by mohly prozradit odpověď)
+  const popisCile = (s) => "Stanoviště " + s.id; // názvy míst vidí jen učitel (hráčům by mohly prozradit odpověď)
   function nastavCil(s) {
     const lab = encodeURIComponent("Stanoviště " + s.id);
     $("nNadpis").textContent = "Nejbližší střípek: " + popisCile(s);
@@ -335,7 +328,7 @@
   }
   function tik() {
     const n = casNavratu();
-    $("hCas").textContent = n && !cvic ? "Zbývá " + textZbyva() : "";
+    $("hCas").textContent = n ? "Zbývá " + textZbyva() : "";
     if (pohled === "ucitel") $("tZbyva").textContent = textZbyva();
   }
   setInterval(tik, 1000);
@@ -354,7 +347,7 @@
   // ---------- obraz ze střípků (5×4, vlastní SVG #obraz v index.html) ----------
   function kresliObraz(el, pref, novy) {
     const hot = new Set(STANOVISTE.filter((s) => hotove(stav.stanoviste[s.id])).map((s) => s.id));
-    const vse = !cvic && hot.size === VSECH;
+    const vse = hot.size === VSECH;
     let mask = "", sil = "", cis = "";
     STANOVISTE.forEach((s) => {
       const x = ((s.id - 1) % 5) * 100, y = Math.floor((s.id - 1) / 5) * 100, ok = hot.has(s.id);
@@ -442,19 +435,17 @@
   }
   function renderHra() {
     const cur = aktualni(), akt = aktivni();
-    ["pNav", "pTeaser", "pFinale", "pDopis", "pSbirkaFinale", "pCvicHotovo"].forEach((i) => { $(i).hidden = true; });
+    ["pNav", "pTeaser", "pFinale", "pDopis", "pSbirkaFinale"].forEach((i) => { $(i).hidden = true; });
     $("hStanoviste").textContent = "Splněno " + pocetHotovych() + " z " + pocet();
     $("hProg").style.width = (pocetHotovych() / pocet() * 100) + "%";
-    const titul = !cur ? (cvic ? "Cvičení hotovo" : stav.finale ? "Mise splněna" : "Finále") : "Hra";
+    const titul = !cur ? (stav.finale ? "Mise splněna" : "Finále") : "Hra";
     $("hTitul").textContent = titul; if (pohled === "hra") $("navT").textContent = titul;
-    $("hVetaNadpis").hidden = $("hVeta").hidden = cvic;
-    if (!cvic) vykresliVetu();
+    vykresliVetu();
     tik();
 
     if (stav.reveal) { if (zobrazena !== "pReveal") renderReveal(stav.reveal); setSheet("pReveal"); return; }
     if (!cur) {
       setSheet(null);
-      if (cvic) { $("pCvicHotovo").hidden = false; return; }
       $("pSbirkaFinale").hidden = false; renderSbirkaFinale();
       return stav.finale ? renderDopis() : renderFinale();
     }
@@ -496,16 +487,16 @@
     $("rDalsi").hidden = !dalsi;
     if (dalsi) { $("rDalsiCislo").textContent = dalsi.id; $("rSour").textContent = fmtSour(dalsi); }
     const n = pocetHotovych();
-    const sym = cvic ? null : CONFIG.SYMBOLY.find((x) => x.od === n), rs = $("rSymbol");
+    const sym = CONFIG.SYMBOLY.find((x) => x.od === n), rs = $("rSymbol");
     rs.hidden = !sym;
     if (sym) { $("rSymDl").className = "dlazdice velka-dl " + sym.barva; $("rSymDl").innerHTML = SVG(sym.ikona); $("rSymNazev").textContent = sym.nazev; }
     const rot = $("rRole");
-    if (dalsi && !cvic && n % CONFIG.ROTACE_PO === 0) {
+    if (dalsi && n % CONFIG.ROTACE_PO === 0) {
       const b = blokRoli(n);
       rot.hidden = false;
       rot.innerHTML = "<h3>Vystřídejte role!</h3><p class=\"popis\">" + b.nadpis + "</p>" + b.html;
     } else rot.hidden = true;
-    $("btnPokracovat").textContent = dalsi ? "Do sbírky a dál" : (cvic ? "Dokončit cvičení" : "Složit obraz a do finále");
+    $("btnPokracovat").textContent = dalsi ? "Do sbírky a dál" : "Složit obraz a do finále";
     $("pReveal").scrollTop = 0;
   }
   function renderFinale() {
@@ -648,19 +639,9 @@
   }
   $("btnKonfety").addEventListener("click", konfety);
 
-  // ---------- režim cvičné hry ----------
-  function prepniRezim(zapnout) {
-    cvic = zapnout; lsSet(REZIM_KEY, cvic ? "cvicna" : "ostra");
-    stav = nacti(); prepis = nactiPrepis(); sheetZavren = false; novyStripek = null;
-    setSheet(null); $("btnChytit").hidden = true; delete $("btnChytit").dataset.id;
-    $("cvicBanner").hidden = !cvic;
-    if (pohled === "ucitel") renderUcitel(); else ukaz(pohled === "home" ? "home" : pohled);
-  }
-  $("btnCvicKonec").addEventListener("click", () => { prepniRezim(false); ukaz("hra"); });
-  $("btnCvicna").addEventListener("click", () => prepniRezim(!cvic));
-  $("btnCvicDosah").addEventListener("click", () => { // dosah radaru cvičné hry: 150 → 400 → 800 → 150 m
+  $("btnDosah").addEventListener("click", () => { // dosah radaru: 150 → 400 → 800 → 150 m
     const d = [150, 400, 800], i = d.indexOf(radarM());
-    lsSet("bojovka.cvicRadar", String(d[(i + 1) % d.length])); renderUcitel();
+    lsSet("bojovka.radar", String(d[(i + 1) % d.length])); renderUcitel(); kresliRadar();
   });
 
   // ---------- učitel ----------
@@ -701,9 +682,7 @@
     varov.forEach((t) => { const li = document.createElement("li"); li.textContent = t; ul.appendChild(li); });
     v.appendChild(ul);
 
-    $("cvicBanner").hidden = !cvic; $("btnCvicDosah").hidden = !cvic;
-    $("cvicDosah").textContent = radarM() + " m (klepnutím změníte: 150 / 400 / 800)";
-    $("cvicStav").textContent = cvic ? "zapnuto (" + CVIC_N + " stanovišť, vlastní stav a souřadnice, radar " + radarM() + " m)" : "vypnuto (ostrá hra)";
+    $("dosahText").textContent = radarM() + " m (klepnutím změníte: 150 / 400 / 800)";
     $("tZacatek").textContent = stav.zacatek ? new Date(stav.zacatek).toLocaleString("cs-CZ") : "ještě nezačalo";
     const n = casNavratu();
     $("tNavrat").textContent = n ? hm(n) : "–";
@@ -732,7 +711,7 @@
       const sm = document.createElement("summary");
       sm.textContent = s.id + ". " + s.nazev + " – " + STAV_TEXT[st.stav] + (hotove(st) ? " (" + s.pismeno + ")" : "") + (s.prepsano ? " [přepsáno]" : "");
       const p = document.createElement("div"); p.className = "stanoviste-telo";
-      const orig = zaklad(STANOVISTE.find((x) => x.id === s.id));
+      const orig = STANOVISTE.find((x) => x.id === s.id);
       [
         "Souřadnice: " + fmtSour(s) + (s.prepsano ? " (GPS ±" + Math.round(prepis[s.id].acc) + " m); původní " + fmtSour(orig) : " (jistota místa: " + s.jistota + ")"),
         "Místo schránky: " + s.mistoPopis,
@@ -761,7 +740,7 @@
     uloz(); renderUcitel();
   });
   $("btnReset").addEventListener("click", () => {
-    if (!confirm("Opravdu smazat postup " + (cvic ? "CVIČNÉ" : "OSTRÉ") + " hry na tomto telefonu?")) return;
+    if (!confirm("Opravdu smazat postup hry na tomto telefonu?")) return;
     stav = novyStav(); sheetZavren = false; uloz(); renderUcitel();
   });
   function stahni(text, jmeno) {
@@ -774,7 +753,7 @@
   const razitko = () => { const d = new Date(); return d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + "-" + pad(d.getHours()) + pad(d.getMinutes()); };
   $("btnExport").addEventListener("click", () => {
     const data = {
-      aplikace: "Operace 17. listopad", verze: typeof APP_VERSION !== "undefined" ? APP_VERSION : null, rezim: cvic ? "cvicna" : "ostra",
+      aplikace: "Operace 17. listopad", verze: typeof APP_VERSION !== "undefined" ? APP_VERSION : null,
       exportovano: new Date().toISOString(), zacatek: stav.zacatek ? new Date(stav.zacatek).toISOString() : null,
       konec: stav.konec ? new Date(stav.konec).toISOString() : null, hotovo: pocetHotovych(),
       stanoviste: sts().map((s) => {
@@ -791,7 +770,7 @@
   $("btnExportSour").addEventListener("click", () => {
     const data = {
       verze: "prepis-" + razitko(),
-      poznamka: "Souřadnice upravené v aplikaci (GPS telefonu, učitelský režim)" + (cvic ? " – CVIČNÁ hra, jen stanoviště 1–" + CVIC_N + "" : "") + ". mistoPopis je zkrácený. Vložte do bojovka-zdroj/trasa.json a spusťte tools/build-data.py.",
+      poznamka: "Souřadnice upravené v aplikaci (GPS telefonu, učitelský režim)" + ". mistoPopis je zkrácený. Vložte do bojovka-zdroj/trasa.json a spusťte tools/build-data.py.",
       stanoviste: sts().map((s) => ({ id: s.id, nazev: s.nazev, lat: +(+s.lat).toFixed(6), lng: +(+s.lng).toFixed(6), mistoPopis: s.mistoPopis,
         zdroj: s.prepsano ? "GPS telefonu, přesnost ±" + Math.round(prepis[s.id].acc) + " m, " + new Date(prepis[s.id].cas).toISOString() : "trasa.json (beze změny)",
         jistota: s.prepsano ? "vysoká (změřeno)" : s.jistota })),

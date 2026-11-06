@@ -89,7 +89,6 @@
     </header>
 
     <main>
-      <div id="cvicBanner" class="cvic-banner" hidden>CVIČNÁ HRA: 7 zkušebních stanovišť, ostrá hra se nemění</div>
       <!-- HRA -->
       <section id="v-hra" class="pohled" hidden>
         <div class="titul-radek"><img class="stuha stuha-mala" src="img/stuha.png" alt="" width="420" height="609" aria-hidden="true"><h1 id="hTitul" class="large">Hra</h1></div>
@@ -156,13 +155,6 @@
           <div class="skup form-skup">
             <p class="odst">Stanoviště je odemčené. Úkol na vás čeká.</p>
             <button id="btnOtevritUkol" class="btn" type="button">Zobrazit úkol</button>
-          </div>
-        </div>
-
-        <div id="pCvicHotovo" class="blok" hidden>
-          <div class="skup form-skup">
-            <p class="odst">Cvičná hra je dokončená. Odemykání podle polohy funguje na všech sedmi místech.</p>
-            <button id="btnCvicKonec" class="btn" type="button">Ukončit cvičnou hru</button>
           </div>
         </div>
 
@@ -269,12 +261,10 @@
         <div class="skola skola-mala"><img src="img/logo-zs-vancurova.png" alt="Logo ZŠ Vančurova Hodonín" width="32" height="32"><span>ZŠ Vančurova Hodonín</span></div>
         <div id="uVarovani" class="varovani" hidden></div>
 
-        <h2 class="sekce">Cvičná hra</h2>
+        <h2 class="sekce">Radar</h2>
         <div class="skup">
-          <button id="btnCvicna" class="rad rad-odkaz" type="button"><span class="dlazdice c-green"><svg class="ic"><use href="#i-pin"/></svg></span>
-            <div class="rad-t"><b>Cvičná hra (7 stanovišť)</b><small id="cvicStav"></small></div><svg class="ic sip"><use href="#i-dal"/></svg></button>
-          <button id="btnCvicDosah" class="rad rad-odkaz" type="button" hidden><span class="dlazdice c-orange"><svg class="ic"><use href="#i-kompas"/></svg></span>
-            <div class="rad-t"><b>Dosah radaru cvičné hry</b><small id="cvicDosah"></small></div><svg class="ic sip"><use href="#i-dal"/></svg></button>
+          <button id="btnDosah" class="rad rad-odkaz" type="button"><span class="dlazdice c-orange"><svg class="ic"><use href="#i-kompas"/></svg></span>
+            <div class="rad-t"><b>Dosah radaru</b><small id="dosahText"></small></div><svg class="ic sip"><use href="#i-dal"/></svg></button>
         </div>
 
         <h2 class="sekce">Čas</h2>

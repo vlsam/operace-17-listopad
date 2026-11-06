@@ -1,15 +1,15 @@
 // Generováno skriptem tools/build-data.py z trasa.json a zadání. Needitovat ručně.
 // Odpovědi jsou jen jako SHA-256 z "<id>|<odpověď bez diakritiky, malými, jen a-z0-9>".
-const TRASA_VERZE = "navrh-1"; // NEOVĚŘENO v terénu
+const TRASA_VERZE = "navrh-2"; // NEOVĚŘENO v terénu
 const VETA_MEZERY = [7, 2, 11];
 const STANOVISTE = [
  {
   "id": 1,
-  "nazev": "Pomník T. G. Masaryka u Masarykova muzea (Zámecká)",
-  "lat": 48.846806,
-  "lng": 17.127168,
-  "mistoPopis": "Veřejný prostor u pomníku na ulici Zámecká; schránka u paty pomníku nebo u lavičky vedle něj, ne u vjezdu do muzea. Masarykovo muzeum (48.846746, 17.127354) je ve stejném místě.",
-  "jistota": "vysoká",
+  "nazev": "Památník T.G. Masaryka",
+  "lat": 48.8556189,
+  "lng": 17.1236881,
+  "mistoPopis": "Místo zadané uživatelem (souřadnice zadány ručně). Přesné umístění schránky určí učitelka na místě; použij „Nastavit na moji aktuální polohu“ v učitelském režimu.",
+  "jistota": "zadáno uživatelem, neověřeno v terénu",
   "zadani": "Doplňte slovo do věty: „Možnost vyjadřovat názory a rozhodovat o svém životě nazýváme…“",
   "pismeno": "S",
   "napoveda": [
@@ -22,11 +22,11 @@ const STANOVISTE = [
  },
  {
   "id": 2,
-  "nazev": "Gymnázium Hodonín (Legionářů / Komenského)",
-  "lat": 48.849642,
-  "lng": 17.130795,
-  "mistoPopis": "Na veřejném chodníku před školou (ne ve školním areálu). Schránka u stromu nebo sloupku mimo oplocení.",
-  "jistota": "vysoká",
+  "nazev": "Střední škola průmyslová a umělecká, Hodonín",
+  "lat": 48.8574631,
+  "lng": 17.1284283,
+  "mistoPopis": "Místo zadané uživatelem (souřadnice zadány ručně). Přesné umístění schránky určí učitelka na místě; použij „Nastavit na moji aktuální polohu“ v učitelském režimu.",
+  "jistota": "zadáno uživatelem, neověřeno v terénu",
   "zadani": "17. listopadu 1939 nacisté uzavřeli české ________. Doplňte dvě slova.",
   "pismeno": "V",
   "napoveda": [
@@ -39,11 +39,11 @@ const STANOVISTE = [
  },
  {
   "id": 3,
-  "nazev": "Pomník Josefa Mánesa (Komenského)",
-  "lat": 48.849877,
-  "lng": 17.13,
-  "mistoPopis": "U pomníku na ulici Komenského, cca 70 m od gymnázia. Schránka za lavičkou nebo u podstavce, ne u silnice. Stanoviště je blízko stanoviště 2, žáci je musí rozlišit podle úkolu.",
-  "jistota": "vysoká",
+  "nazev": "Kostel sv. Bartoloměje, Rohatec",
+  "lat": 48.8805731,
+  "lng": 17.1822506,
+  "mistoPopis": "Místo zadané uživatelem (souřadnice zadány ručně). Přesné umístění schránky určí učitelka na místě; použij „Nastavit na moji aktuální polohu“ v učitelském režimu.",
+  "jistota": "zadáno uživatelem, neověřeno v terénu",
   "zadani": "Student medicíny, který byl postřelen při demonstraci 28. října 1939 a později zemřel, se jmenoval Jan ________.",
   "pismeno": "O",
   "napoveda": [
@@ -57,11 +57,11 @@ const STANOVISTE = [
  },
  {
   "id": 4,
-  "nazev": "Břeh Moravy u lávky (okolí kavárny Přístav, ulice K Lávce)",
-  "lat": 48.847709,
-  "lng": 17.131612,
-  "mistoPopis": "Souřadnice je kavárna Přístav (soukromý podnik). Schránku dát na veřejný břeh či stezku vedle lávky, nikoli do areálu kavárny. Přesné místo určit v terénu.",
-  "jistota": "nízká",
+  "nazev": "Rohatec – přístav",
+  "lat": 48.8754081,
+  "lng": 17.1919619,
+  "mistoPopis": "Místo zadané uživatelem (souřadnice zadány ručně). Přesné umístění schránky určí učitelka na místě; použij „Nastavit na moji aktuální polohu“ v učitelském režimu.",
+  "jistota": "zadáno uživatelem, neověřeno v terénu",
   "zadani": "Které moravské město je spojeno s českými univerzitami a studentským životem? Nápověda: začíná na B.",
   "pismeno": "B",
   "napoveda": [
@@ -74,11 +74,11 @@ const STANOVISTE = [
  },
  {
   "id": 5,
-  "nazev": "Přístav U jezu (Morava, Legionářů)",
-  "lat": 48.843175,
-  "lng": 17.14398,
-  "mistoPopis": "Veřejné nábřeží nebo cesta u přístavu a jezu; schránka bezpečně daleko od hrany vody. Přístav může být oplocený nebo zaplavený, ověřit přístupnost.",
-  "jistota": "střední",
+  "nazev": "Vysílač",
+  "lat": 48.8870581,
+  "lng": 17.1951697,
+  "mistoPopis": "Místo zadané uživatelem (souřadnice zadány ručně). Přesné umístění schránky určí učitelka na místě; použij „Nastavit na moji aktuální polohu“ v učitelském režimu.",
+  "jistota": "zadáno uživatelem, neověřeno v terénu",
   "zadani": "Doplňte větu: „Studenti, herci i další ________ veřejně vyjadřovali nesouhlas s režimem.“",
   "pismeno": "O",
   "napoveda": [
@@ -91,11 +91,11 @@ const STANOVISTE = [
  },
  {
   "id": 6,
-  "nazev": "Evangelický kostel (Husova)",
-  "lat": 48.849106,
-  "lng": 17.132712,
-  "mistoPopis": "Na veřejném chodníku před kostelem (ne na pozemku církve). Schránka u sloupku nebo lavičky.",
-  "jistota": "vysoká",
+  "nazev": "Rozcestí vycházky",
+  "lat": 48.8944194,
+  "lng": 17.1808361,
+  "mistoPopis": "Místo zadané uživatelem (souřadnice zadány ručně). Přesné umístění schránky určí učitelka na místě; použij „Nastavit na moji aktuální polohu“ v učitelském režimu.",
+  "jistota": "zadáno uživatelem, neověřeno v terénu",
   "zadani": "Jak se nazývá systém, v němž občané mohou volit své zástupce a svobodně kritizovat vládu?",
   "pismeno": "D",
   "napoveda": [
@@ -108,11 +108,11 @@ const STANOVISTE = [
  },
  {
   "id": 7,
-  "nazev": "Dům kultury Hodonín (Horní Valy)",
-  "lat": 48.850869,
-  "lng": 17.133272,
-  "mistoPopis": "Veřejné prostranství před Domem kultury; schránka u schodů nebo okraje trávníku, mimo parkoviště.",
-  "jistota": "střední",
+  "nazev": "Zahrada",
+  "lat": 48.8828714,
+  "lng": 17.1795058,
+  "mistoPopis": "Místo zadané uživatelem (souřadnice zadány ručně). Přesné umístění schránky určí učitelka na místě; použij „Nastavit na moji aktuální polohu“ v učitelském režimu.",
+  "jistota": "zadáno uživatelem, neověřeno v terénu",
   "zadani": "Studentská vzpomínková akce 17. listopadu 1989 začala v Praze na místě, jehož název začíná písmenem A.",
   "pismeno": "A",
   "napoveda": [

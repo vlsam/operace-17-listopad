@@ -286,7 +286,6 @@ textarea { width: 100%; border: 0; border-radius: 16px; background: var(--fill);
 .o-cislo { fill: var(--label2); font-size: 26px; font-weight: 700; opacity: .8; }
 .m-nove { animation: m-bliknuti 1.4s ease-out; }
 .obraz.slozeno { animation: slozeni 1.6s var(--spring); filter: drop-shadow(0 0 14px rgba(255,214,10,.5)); }
-.cvic-banner { background: var(--orange); color: #000; font-weight: 700; font-size: 15px; border-radius: 14px; padding: 10px 16px; margin: 4px 0 16px; text-align: center; }
 .chytit + .popis { margin-top: 0; }
 .prepis-zprava { background: var(--fill); border-radius: 12px; padding: 12px 14px; color: var(--label); }
 .stanoviste-telo .btn { margin-top: 4px; }
