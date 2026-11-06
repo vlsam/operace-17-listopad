@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0A84FF">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Operace 17.11.">
+  <title>Operace 17. listopad</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <!-- Sada ikon ve stylu SF Symbols: mřížka 24, linka 1.75, zaoblené konce -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-kompas" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.6 8.4l-2.2 5-5 2.2 2.2-5z"/></symbol>
+      <symbol id="i-cesta" viewBox="0 0 24 24"><path d="M3.5 6.5l5.5-2 6 2.5 5.5-2v13l-5.5 2-6-2.5-5.5 2z"/><path d="M9 4.5v13M15 7v13"/></symbol>
+      <symbol id="i-tym" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19.5c0-3.2 2.4-5.2 5.5-5.2s5.5 2 5.5 5.2"/><path d="M15.5 4.9a3.1 3.1 0 010 6.2M17.5 14.6c2 .6 3.2 2.2 3.2 4.9"/></symbol>
+      <symbol id="i-zamek" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9.5" rx="2.8"/><path d="M8 11V8a4 4 0 018 0v3"/></symbol>
+      <symbol id="i-klic" viewBox="0 0 24 24"><circle cx="8" cy="15.5" r="4"/><path d="M11 12.5L20 3.5M16.5 7l3 3M13.8 9.7l2.3 2.3"/></symbol>
+      <symbol id="i-lupa" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.5"/><path d="M15.8 15.8L20.5 20.5"/></symbol>
+      <symbol id="i-kniha" viewBox="0 0 24 24"><path d="M4 5.8C4 4.8 4.8 4 5.8 4H11.5v16H5.8c-1 0-1.8-.8-1.8-1.8zM20 5.8c0-1-.8-1.8-1.8-1.8H12.5v16h5.7c1 0 1.8-.8 1.8-1.8z"/></symbol>
+      <symbol id="i-stit" viewBox="0 0 24 24"><path d="M12 3l7.5 3v5.5c0 4.4-3.1 7.7-7.5 9.5-4.4-1.8-7.5-5.1-7.5-9.5V6z"/><path d="M8.8 12l2.4 2.4 4.1-4.8"/></symbol>
+      <symbol id="i-svicka" viewBox="0 0 24 24"><path d="M12 2.8c2.9 3 3.9 5 2.6 7.2-.6 1-1.5 1.4-2.6 1.4s-2-.4-2.6-1.4C8.1 7.8 9.1 5.8 12 2.8z"/><rect x="8.5" y="14" width="7" height="7" rx="2"/></symbol>
+      <symbol id="i-ok" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+      <symbol id="i-slunce" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6L7 7M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/></symbol>
+      <symbol id="i-mesic" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 019.5 4a8.5 8.5 0 1010.5 10.5z"/></symbol>
+      <symbol id="i-zarovka" viewBox="0 0 24 24"><path d="M9.5 18h5M10.5 21h3M12 3a6 6 0 00-3.7 10.7c.7.6 1.2 1.3 1.2 2.3h5c0-1 .5-1.7 1.2-2.3A6 6 0 0012 3z"/></symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-5.8 7-11a7 7 0 10-14 0c0 5.2 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+      <symbol id="i-telefon" viewBox="0 0 24 24"><path d="M6.8 3.5h2.7l1.5 4-2 1.5a11 11 0 006 6l1.5-2 4 1.5v2.7c0 1-.8 1.8-1.8 1.8C10.8 19 5 13.2 5 5.3c0-1 .8-1.8 1.8-1.8z"/></symbol>
+      <symbol id="i-sdilet" viewBox="0 0 24 24"><path d="M12 15V3.5M8 7l4-4 4 4M7 10.5H6a1.5 1.5 0 00-1.5 1.5v7.5A1.5 1.5 0 006 21h12a1.5 1.5 0 001.5-1.5V12a1.5 1.5 0 00-1.5-1.5h-1"/></symbol>
+      <symbol id="i-dal" viewBox="0 0 24 24"><path d="M9.5 5.5l6.5 6.5-6.5 6.5"/></symbol>
+      <symbol id="i-hodiny" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5.2l3.3 2"/></symbol>
+      <symbol id="i-export" viewBox="0 0 24 24"><path d="M12 15V3.5M8 7.5l4-4 4 4M5 14v4.5A1.5 1.5 0 006.5 20h11a1.5 1.5 0 001.5-1.5V14"/></symbol>
+      <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 112.4 5.5M4.5 18v-5h5"/></symbol>
+      <symbol id="i-gesto-v" viewBox="0 0 24 24"><path d="M8 3l3.2 9.5M16 3l-3.2 9.5M7.5 12.5h9c.6 0 1 .4 1 1V17a5.5 5.5 0 01-5.5 5.5A5.5 5.5 0 016.5 17v-3.5c0-.6.4-1 1-1z"/></symbol>
+      <symbol id="i-of" viewBox="0 0 24 24"><circle cx="8" cy="12.5" r="5.5"/><path d="M6.2 11h.01M9.8 11h.01M5.8 13.8c1.3 1.4 3.1 1.4 4.4 0"/><path d="M20 7.5h-5v10M15 12.5h4"/></symbol>
+      <symbol id="i-nota" viewBox="0 0 24 24"><path d="M9 17.5V5.5l10-2v12"/><circle cx="6.5" cy="17.5" r="2.5"/><circle cx="16.5" cy="15.5" r="2.5"/></symbol>
+      <symbol id="i-sbirka" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7.5" height="7.5" rx="2.2"/><rect x="13" y="3.5" width="7.5" height="7.5" rx="2.2"/><rect x="3.5" y="13" width="7.5" height="7.5" rx="2.2"/><rect x="13" y="13" width="7.5" height="7.5" rx="2.2"/></symbol>
+      <symbol id="i-stripek" viewBox="0 0 24 24"><path d="M12 2.5l5.5 5L15 21l-9-2.5L3.5 8.5z"/></symbol>
+      <symbol id="i-varovani" viewBox="0 0 24 24"><path d="M12 4l9 15.5H3z"/><path d="M12 10v4.2M12 16.9v.1"/></symbol>
+      <linearGradient id="ob-nebe" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0A1B45"/><stop offset=".65" stop-color="#1E3A9E"/><stop offset="1" stop-color="#5E5CE6"/></linearGradient><linearGradient id="ob-plamen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE066"/><stop offset="1" stop-color="#FF453A"/></linearGradient><linearGradient id="ob-svicka" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#D9DCEB"/></linearGradient><radialGradient id="ob-zar" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFB340" stop-opacity=".6"/><stop offset="1" stop-color="#FFB340" stop-opacity="0"/></radialGradient>
+      <symbol id="obraz" viewBox="0 0 500 400"><rect width="500" height="400" fill="url(#ob-nebe)"/><g fill="#fff" opacity=".85"><circle cx="34" cy="28" r="1.2"/><circle cx="92" cy="60" r="1.7"/><circle cx="150" cy="22" r="2.2"/><circle cx="210" cy="52" r="1.2"/><circle cx="300" cy="24" r="1.7"/><circle cx="372" cy="58" r="2.2"/><circle cx="430" cy="30" r="1.2"/><circle cx="470" cy="70" r="1.7"/><circle cx="60" cy="110" r="2.2"/><circle cx="402" cy="108" r="1.2"/><circle cx="260" cy="18" r="1.7"/><circle cx="330" cy="90" r="2.2"/></g><g fill="#0A1636"><rect x="0" y="200" width="86" height="200"/><rect x="80" y="150" width="84" height="250"/><rect x="160" y="205" width="98" height="195"/><rect x="252" y="138" width="88" height="262"/><rect x="334" y="188" width="86" height="212"/><rect x="414" y="160" width="86" height="240"/></g><g fill="#FFD479" opacity=".8"><rect x="12" y="286" width="9" height="12" rx="1.5"/><rect x="30" y="262" width="9" height="12" rx="1.5"/><rect x="30" y="286" width="9" height="12" rx="1.5"/><rect x="30" y="310" width="9" height="12" rx="1.5"/><rect x="48" y="238" width="9" height="12" rx="1.5"/><rect x="48" y="286" width="9" height="12" rx="1.5"/><rect x="66" y="238" width="9" height="12" rx="1.5"/><rect x="66" y="286" width="9" height="12" rx="1.5"/><rect x="92" y="188" width="9" height="12" rx="1.5"/><rect x="92" y="284" width="9" height="12" rx="1.5"/><rect x="110" y="212" width="9" height="12" rx="1.5"/><rect x="110" y="236" width="9" height="12" rx="1.5"/><rect x="128" y="164" width="9" height="12" rx="1.5"/><rect x="128" y="260" width="9" height="12" rx="1.5"/><rect x="128" y="284" width="9" height="12" rx="1.5"/><rect x="128" y="308" width="9" height="12" rx="1.5"/><rect x="146" y="188" width="9" height="12" rx="1.5"/><rect x="146" y="236" width="9" height="12" rx="1.5"/><rect x="146" y="308" width="9" height="12" rx="1.5"/><rect x="172" y="291" width="9" height="12" rx="1.5"/><rect x="172" y="315" width="9" height="12" rx="1.5"/><rect x="190" y="243" width="9" height="12" rx="1.5"/><rect x="208" y="219" width="9" height="12" rx="1.5"/><rect x="208" y="291" width="9" height="12" rx="1.5"/><rect x="208" y="315" width="9" height="12" rx="1.5"/><rect x="226" y="267" width="9" height="12" rx="1.5"/><rect x="226" y="291" width="9" height="12" rx="1.5"/><rect x="264" y="152" width="9" height="12" rx="1.5"/><rect x="264" y="200" width="9" height="12" rx="1.5"/><rect x="264" y="272" width="9" height="12" rx="1.5"/><rect x="264" y="296" width="9" height="12" rx="1.5"/><rect x="282" y="176" width="9" height="12" rx="1.5"/><rect x="282" y="248" width="9" height="12" rx="1.5"/><rect x="300" y="152" width="9" height="12" rx="1.5"/><rect x="300" y="176" width="9" height="12" rx="1.5"/><rect x="300" y="200" width="9" height="12" rx="1.5"/><rect x="300" y="224" width="9" height="12" rx="1.5"/><rect x="300" y="248" width="9" height="12" rx="1.5"/><rect x="300" y="272" width="9" height="12" rx="1.5"/><rect x="318" y="224" width="9" height="12" rx="1.5"/><rect x="318" y="272" width="9" height="12" rx="1.5"/><rect x="346" y="226" width="9" height="12" rx="1.5"/><rect x="346" y="250" width="9" height="12" rx="1.5"/><rect x="346" y="274" width="9" height="12" rx="1.5"/><rect x="346" y="322" width="9" height="12" rx="1.5"/><rect x="364" y="226" width="9" height="12" rx="1.5"/><rect x="364" y="250" width="9" height="12" rx="1.5"/><rect x="364" y="274" width="9" height="12" rx="1.5"/><rect x="382" y="202" width="9" height="12" rx="1.5"/><rect x="400" y="226" width="9" height="12" rx="1.5"/><rect x="400" y="250" width="9" height="12" rx="1.5"/><rect x="400" y="274" width="9" height="12" rx="1.5"/><rect x="400" y="298" width="9" height="12" rx="1.5"/><rect x="400" y="322" width="9" height="12" rx="1.5"/><rect x="426" y="270" width="9" height="12" rx="1.5"/><rect x="444" y="222" width="9" height="12" rx="1.5"/><rect x="444" y="294" width="9" height="12" rx="1.5"/><rect x="444" y="318" width="9" height="12" rx="1.5"/><rect x="462" y="246" width="9" height="12" rx="1.5"/><rect x="480" y="294" width="9" height="12" rx="1.5"/><rect x="480" y="318" width="9" height="12" rx="1.5"/></g><rect y="345" width="500" height="55" fill="#0A1636"/><path d="M0 366H500M0 385H500" stroke="#1B2F8A" stroke-width="2" opacity=".7"/><g stroke="#FFD479" stroke-width="4" fill="none" stroke-linecap="round"><circle cx="250" cy="34" r="15"/><g transform="rotate(-18 250 49)"><circle cx="250" cy="70" r="9"/><path d="M250 79V136M250 118h11M250 128h8"/></g><g><circle cx="250" cy="70" r="9"/><path d="M250 79V150M250 130h11M250 141h8"/></g><g transform="rotate(18 250 49)"><circle cx="250" cy="70" r="9"/><path d="M250 79V136M250 118h11M250 128h8"/></g></g><path d="M108 346V326" stroke="#2FB35A" stroke-width="3" fill="none"/><g transform="translate(108 320)"><circle cx="0" cy="-7" r="6" fill="#D7141A"/><circle cx="7" cy="-2" r="6" fill="#FFFFFF"/><circle cx="4" cy="6" r="6" fill="#D7141A"/><circle cx="-4" cy="6" r="6" fill="#FFFFFF"/><circle cx="-7" cy="-2" r="6" fill="#D7141A"/><circle r="4" fill="#FFD60A"/></g><path d="M200 346V326" stroke="#2FB35A" stroke-width="3" fill="none"/><g transform="translate(200 320)"><circle cx="0" cy="-7" r="6" fill="#FFFFFF"/><circle cx="7" cy="-2" r="6" fill="#4DA3FF"/><circle cx="4" cy="6" r="6" fill="#FFFFFF"/><circle cx="-4" cy="6" r="6" fill="#4DA3FF"/><circle cx="-7" cy="-2" r="6" fill="#FFFFFF"/><circle r="4" fill="#FFD60A"/></g><path d="M300 346V326" stroke="#2FB35A" stroke-width="3" fill="none"/><g transform="translate(300 320)"><circle cx="0" cy="-7" r="6" fill="#4DA3FF"/><circle cx="7" cy="-2" r="6" fill="#D7141A"/><circle cx="4" cy="6" r="6" fill="#4DA3FF"/><circle cx="-4" cy="6" r="6" fill="#D7141A"/><circle cx="-7" cy="-2" r="6" fill="#4DA3FF"/><circle r="4" fill="#FFD60A"/></g><path d="M392 346V326" stroke="#2FB35A" stroke-width="3" fill="none"/><g transform="translate(392 320)"><circle cx="0" cy="-7" r="6" fill="#D7141A"/><circle cx="7" cy="-2" r="6" fill="#FFFFFF"/><circle cx="4" cy="6" r="6" fill="#D7141A"/><circle cx="-4" cy="6" r="6" fill="#FFFFFF"/><circle cx="-7" cy="-2" r="6" fill="#D7141A"/><circle r="4" fill="#FFD60A"/></g><circle cx="70" cy="257" r="52" fill="url(#ob-zar)"/><rect x="55" y="275" width="30" height="70" rx="7" fill="url(#ob-svicka)"/><path d="M70 245 c14 17 17 27 0 36-17-9-14-19 0-36z" fill="url(#ob-plamen)"/><circle cx="150" cy="229" r="52" fill="url(#ob-zar)"/><rect x="135" y="247" width="30" height="98" rx="7" fill="url(#ob-svicka)"/><path d="M150 217 c14 17 17 27 0 36-17-9-14-19 0-36z" fill="url(#ob-plamen)"/><circle cx="250" cy="203" r="52" fill="url(#ob-zar)"/><rect x="235" y="221" width="30" height="124" rx="7" fill="url(#ob-svicka)"/><path d="M250 191 c14 17 17 27 0 36-17-9-14-19 0-36z" fill="url(#ob-plamen)"/><circle cx="350" cy="237" r="52" fill="url(#ob-zar)"/><rect x="335" y="255" width="30" height="90" rx="7" fill="url(#ob-svicka)"/><path d="M350 225 c14 17 17 27 0 36-17-9-14-19 0-36z" fill="url(#ob-plamen)"/><circle cx="430" cy="251" r="52" fill="url(#ob-zar)"/><rect x="415" y="269" width="30" height="76" rx="7" fill="url(#ob-svicka)"/><path d="M430 239 c14 17 17 27 0 36-17-9-14-19 0-36z" fill="url(#ob-plamen)"/><image href="img/stuha.png" x="452" y="318" width="38" height="55"/></symbol>
+    </defs>
+  </svg>
+
+  <!-- ÚVOD -->
+  <div id="v-home" class="home" hidden>
+    <img class="stuha stuha-home" src="img/stuha.png" alt="" width="420" height="609" aria-hidden="true">
+    <div class="home-obsah">
+      <svg class="hero" viewBox="0 0 240 240" role="img" aria-label="Kompas se svíčkou">
+        <defs>
+          <radialGradient id="zar" cx="50%" cy="40%" r="55%"><stop offset="0" stop-color="#FFB340" stop-opacity=".55"/><stop offset="1" stop-color="#FFB340" stop-opacity="0"/></radialGradient>
+          <linearGradient id="plam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD60A"/><stop offset="1" stop-color="#FF453A"/></linearGradient>
+          <linearGradient id="krouz" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity=".22"/><stop offset="1" stop-color="#ffffff" stop-opacity=".06"/></linearGradient>
+        </defs>
+        <circle cx="120" cy="120" r="118" fill="url(#zar)"/>
+        <circle cx="120" cy="120" r="92" fill="url(#krouz)" stroke="#fff" stroke-width="7"/>
+        <g fill="#fff"><rect x="114.5" y="36" width="11" height="20" rx="5.5"/><rect x="114.5" y="184" width="11" height="20" rx="5.5"/><rect x="36" y="114.5" width="20" height="11" rx="5.5"/><rect x="184" y="114.5" width="20" height="11" rx="5.5"/></g>
+        <rect x="103" y="126" width="34" height="52" rx="9" fill="#fff"/>
+        <path class="plamen" d="M120 66c17 22 22 35 0 48-22-13-17-26 0-48z" fill="url(#plam)"/>
+      </svg>
+      <p class="kicker"><i class="tri a"></i><i class="tri b"></i><i class="tri c"></i> Operace</p>
+      <h1 class="home-titul">17. listopad</h1>
+      <p class="home-pod">Terénní šifrovací hra pro celou třídu. Najděte dvacet schránek a složte poselství.</p>
+      <button id="btnZacit" class="btn velke-btn" type="button">Začít</button>
+      <button id="installBtn" class="btn sklo" type="button" hidden><svg class="ic"><use href="#i-sdilet"/></svg> Přidat na plochu</button>
+      <p id="iosHint" class="ios-navod" hidden><svg class="ic"><use href="#i-sdilet"/></svg><span>Na iPhonu klepněte dole na <strong>Sdílet</strong> a pak na <strong>Přidat na plochu</strong>.</span></p>
+      <button id="btnUcitel" class="odkaz" type="button">Jsem učitel</button>
+    </div>
+    <div class="home-pata">
+      <div class="skola"><img src="img/logo-zs-vancurova.png" alt="Logo ZŠ Vančurova Hodonín" width="52" height="52"><span>Připravila ZŠ Vančurova Hodonín</span></div>
+      <small class="verze-kopie"></small>
+    </div>
+  </div>
+
+  <!-- APLIKACE -->
+  <div id="app" hidden>
+    <header id="nav" class="nav">
+      <div class="nav-in">
+        <img class="nav-logo" src="img/logo-zs-vancurova.png" alt="Logo ZŠ Vančurova Hodonín" width="32" height="32">
+        <span id="navT" class="nav-t"></span>
+        <button id="tema" class="kulate" type="button"></button>
+      </div>
+    </header>
+
+    <main>
+      <div id="cvicBanner" class="cvic-banner" hidden>CVIČNÁ HRA: stanoviště 1 a 2, ostrá hra se nemění</div>
+      <!-- HRA -->
+      <section id="v-hra" class="pohled" hidden>
+        <div class="titul-radek"><img class="stuha stuha-mala" src="img/stuha.png" alt="" width="420" height="609" aria-hidden="true"><h1 id="hTitul" class="large">Hra</h1></div>
+        <div class="stav-radek">
+          <div class="progres" role="img" aria-label="Postup"><div id="hProg" class="progres-v"></div></div>
+          <div class="stav-pilulky">
+            <span class="pilulka" id="hStanoviste"></span>
+            <span class="pilulka" id="hCas"></span>
+          </div>
+        </div>
+        <div id="pNav" class="blok" hidden>
+          <div class="radar-karta">
+            <span class="pilulka" id="rdPozn">Radar čeká na polohu</span>
+            <div class="radar"><svg id="radarSvg" viewBox="-110 -110 220 220" role="img" aria-label="Radar okolí: střípky kolem vás"></svg></div>
+            <button id="btnChytit" class="btn chytit" type="button" hidden></button>
+            <p id="nStav" class="popis stred" role="status"></p>
+            <p id="nPresnost" class="popis stred"></p>
+          </div>
+
+          <div class="kompas-karta">
+            <div class="kompas">
+              <svg class="kompas-kruh" viewBox="0 0 200 200" aria-hidden="true">
+                <circle cx="100" cy="100" r="94" class="k-kruh"/>
+                <g class="k-ticks"><path d="M100 10v14M100 176v14M10 100h14M176 100h14"/></g>
+              </svg>
+              <div id="nSipka" class="sipka" aria-hidden="true">
+                <svg viewBox="0 0 100 100"><path d="M50 8L80 82 50 64 20 82z"/></svg>
+              </div>
+            </div>
+            <div class="kompas-text">
+              <div id="nVzd" class="vzd">–</div>
+              <div id="nSmer" class="popis"></div>
+            </div>
+          </div>
+
+          <h2 class="sekce"><span id="nNadpis">Doporučený cíl</span></h2>
+          <div class="skup">
+            <div class="rad"><span class="dlazdice c-red"><svg class="ic"><use href="#i-pin"/></svg></span>
+              <div class="rad-t"><b>Souřadnice</b><small id="nSour"></small></div></div>
+            <a id="nMapy" class="rad rad-odkaz" href="#" target="_blank" rel="noopener"><span class="dlazdice c-blue"><svg class="ic"><use href="#i-cesta"/></svg></span>
+              <div class="rad-t"><b>Otevřít v Mapách</b></div><svg class="ic sip"><use href="#i-dal"/></svg></a>
+            <a id="nGeo" class="rad rad-odkaz" href="#"><span class="dlazdice c-green"><svg class="ic"><use href="#i-kompas"/></svg></span>
+              <div class="rad-t"><b>Otevřít v aplikaci map</b></div><svg class="ic sip"><use href="#i-dal"/></svg></a>
+            <button id="btnKompas" class="rad rad-odkaz" type="button" hidden><span class="dlazdice c-orange"><svg class="ic"><use href="#i-kompas"/></svg></span>
+              <div class="rad-t"><b>Zapnout kompas</b></div><svg class="ic sip"><use href="#i-dal"/></svg></button>
+            <button id="btnGps" class="rad rad-odkaz" type="button" hidden><span class="dlazdice c-orange"><svg class="ic"><use href="#i-pin"/></svg></span>
+              <div class="rad-t"><b>Zapnout polohu</b></div><svg class="ic sip"><use href="#i-dal"/></svg></button>
+            <button id="btnBezGps" class="rad rad-odkaz" type="button"><span class="dlazdice c-indigo"><svg class="ic"><use href="#i-klic"/></svg></span>
+              <div class="rad-t"><b>Nemám signál GPS</b><small>Odemknutí kódem od učitele</small></div><svg class="ic sip"><use href="#i-dal"/></svg></button>
+          </div>
+          <form id="fKod" class="skup form-skup" hidden>
+            <label for="iKod">Kód od učitele</label>
+            <input id="iKod" type="text" autocomplete="off" autocapitalize="characters" inputmode="text">
+            <button class="btn" type="submit">Odemknout</button>
+          </form>
+          <p id="nKodChyba" class="chyba" role="alert" hidden>Kód nesedí.</p>
+        </div>
+
+        <h2 id="hVetaNadpis" class="sekce">Poselství</h2>
+        <div id="hVeta" class="veta" role="img"></div>
+
+        <div id="pTeaser" class="blok" hidden>
+          <div class="skup form-skup">
+            <p class="odst">Stanoviště je odemčené. Úkol na vás čeká.</p>
+            <button id="btnOtevritUkol" class="btn" type="button">Zobrazit úkol</button>
+          </div>
+        </div>
+
+        <div id="pCvicHotovo" class="blok" hidden>
+          <div class="skup form-skup">
+            <p class="odst">Cvičná hra je dokončená. Odemykání podle polohy funguje na obou místech.</p>
+            <button id="btnCvicKonec" class="btn" type="button">Ukončit cvičnou hru</button>
+          </div>
+        </div>
+
+        <div id="pFinale" class="blok" hidden>
+          <h2 class="sekce">Finále</h2>
+          <div class="skup form-skup">
+            <p class="odst">Máte všech dvacet písmen. Seřaďte je podle pořadí stanovišť, doplňte mezery a vznikne poselství.</p>
+            <p id="fVarovani" class="varovani" hidden></p>
+          </div>
+          <h2 class="sekce">Závěrečné otázky</h2>
+          <div class="skup"><ol id="fOtazky" class="otazky"></ol></div>
+          <form id="fKonec" class="skup form-skup">
+            <label for="iKonec">Číselný kód k zámku</label>
+            <input id="iKonec" type="text" autocomplete="off" inputmode="numeric">
+            <button class="btn" type="submit">Odemknout dopis</button>
+          </form>
+          <p id="fChyba" class="chyba" role="alert" hidden>Kód nesedí.</p>
+          <button id="btnObejit" class="odkaz" type="button" hidden>Učitel: zobrazit dopis bez kódu</button>
+        </div>
+
+        <div id="pDopis" class="blok" hidden>
+          <div class="skup dopis">
+            <img class="stuha stuha-dopis" src="img/stuha.png" alt="" width="420" height="609" aria-hidden="true">
+            <svg class="dopis-ikona" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-svicka"/></svg>
+            <h2>Mise splněna</h2>
+            <div class="skola skola-dopis"><img src="img/logo-zs-vancurova.png" alt="Logo ZŠ Vančurova Hodonín" width="36" height="36"><span>Připravila ZŠ Vančurova Hodonín</span></div>
+            <p id="dText" class="odst"></p>
+            <p id="dCas" class="popis"></p>
+            <button id="btnKonfety" class="btn sek" type="button">Znovu oslavit</button>
+          </div>
+        </div>
+      <!-- SBÍRKA (na finále) -->
+      <section id="pSbirkaFinale" class="blok" hidden>
+        <h2 class="sekce">Obraz 17. listopadu</h2>
+        <div id="fObraz" class="obraz-box"></div>
+        <h2 class="sekce">Sbírka symbolů</h2>
+        <div id="fSbirka" class="skup"></div>
+      </section>
+      </section>
+
+      <!-- CESTA -->
+      <section id="v-cesta" class="pohled" hidden>
+        <h1 class="large">Cesta</h1>
+        <p class="popis uvod-pop" id="cPopis"></p>
+        <div id="cSeznam"></div>
+      </section>
+
+      <!-- SBÍRKA -->
+      <section id="v-sbirka" class="pohled" hidden>
+        <div class="titul-radek"><img class="stuha stuha-mala" src="img/stuha.png" alt="" width="420" height="609" aria-hidden="true"><h1 class="large">Sbírka</h1></div>
+        <div class="obraz-karta"><div id="sObraz" class="obraz-box"></div><p id="sObrazPopis" class="popis"></p></div>
+        <h2 class="sekce">Symboly 17. listopadu</h2>
+        <p class="popis uvod-pop" id="sPopis"></p>
+        <div id="sSeznam"></div>
+      </section>
+
+      <!-- TÝM -->
+      <section id="v-tym" class="pohled" hidden>
+        <h1 class="large">Tým</h1>
+        <h2 class="sekce" id="hRoleNadpis">Role</h2>
+        <div id="hRoleTelo"></div>
+        <p class="popis pozn">Po každých čtyřech stanovištích se role vystřídají: každý si vezme jinou roli než dosud.</p>
+        <h2 class="sekce">Bezpečnost</h2>
+        <div class="skup">
+          <a id="hNouze" class="rad rad-odkaz" href="#"><span class="dlazdice c-red"><svg class="ic"><use href="#i-telefon"/></svg></span>
+            <div class="rad-t"><b>Nouzový kontakt</b><small id="hNouzeText"></small></div><svg class="ic sip"><use href="#i-dal"/></svg></a>
+          <a class="rad rad-odkaz" href="tel:112"><span class="dlazdice c-red"><svg class="ic"><use href="#i-varovani"/></svg></span>
+            <div class="rad-t"><b>Tísňové volání 112</b></div><svg class="ic sip"><use href="#i-dal"/></svg></a>
+        </div>
+        <h2 class="sekce">Vzhled</h2>
+        <div class="skup form-skup">
+          <div class="segment" role="radiogroup" aria-label="Vzhled aplikace">
+            <button type="button" role="radio" data-tema="auto">Podle systému</button>
+            <button type="button" role="radio" data-tema="light">Světlý</button>
+            <button type="button" role="radio" data-tema="dark">Tmavý</button>
+          </div>
+        </div>
+        <h2 class="sekce">Aplikace</h2>
+        <div class="skup">
+          <button id="btnDomu" class="rad rad-odkaz" type="button"><span class="dlazdice c-gray"><svg class="ic"><use href="#i-kompas"/></svg></span>
+            <div class="rad-t"><b>Úvodní obrazovka</b></div><svg class="ic sip"><use href="#i-dal"/></svg></button>
+          <div class="rad"><span class="dlazdice c-gray"><svg class="ic"><use href="#i-hodiny"/></svg></span>
+            <div class="rad-t"><b>Verze</b><small id="verze"></small></div></div>
+          <div class="rad skola-rad"><img src="img/logo-zs-vancurova.png" alt="Logo ZŠ Vančurova Hodonín" width="36" height="36">
+            <div class="rad-t"><b>Připravila ZŠ Vančurova Hodonín</b><small>Grafika: vlastní SVG ilustrace a ikony. Stuha, logo a fotka klíčů: dodáno uživatelem/školou (původ a licence fotky klíčů neověřeny).</small></div></div>
+        </div>
+      </section>
+
+      <!-- PIN -->
+      <section id="v-pin" class="pohled" hidden>
+        <h1 class="large">Učitel</h1>
+        <form id="fPin" class="skup form-skup">
+          <label for="iPin">PIN</label>
+          <input id="iPin" type="password" inputmode="numeric" autocomplete="off">
+          <button class="btn" type="submit">Vstoupit</button>
+        </form>
+        <p id="pinChyba" class="chyba" role="alert" hidden>PIN nesedí.</p>
+        <p class="popis pozn">PIN je jen ochrana před omylem, ne zabezpečení: je uložen v souboru config.js.</p>
+      </section>
+
+      <!-- UČITEL -->
+      <section id="v-ucitel" class="pohled" hidden>
+        <h1 class="large">Učitel</h1>
+        <div class="skola skola-mala"><img src="img/logo-zs-vancurova.png" alt="Logo ZŠ Vančurova Hodonín" width="32" height="32"><span>ZŠ Vančurova Hodonín</span></div>
+        <div id="uVarovani" class="varovani" hidden></div>
+
+        <h2 class="sekce">Cvičná hra</h2>
+        <div class="skup">
+          <button id="btnCvicna" class="rad rad-odkaz" type="button"><span class="dlazdice c-green"><svg class="ic"><use href="#i-pin"/></svg></span>
+            <div class="rad-t"><b>Cvičná hra se 2 stanovišti</b><small id="cvicStav"></small></div><svg class="ic sip"><use href="#i-dal"/></svg></button>
+        </div>
+
+        <h2 class="sekce">Čas</h2>
+        <div class="skup">
+          <div class="rad"><div class="rad-t"><b>Začátek</b></div><span class="rad-v" id="tZacatek"></span></div>
+          <div class="rad"><div class="rad-t"><b>Čas návratu</b></div><span class="rad-v" id="tNavrat"></span></div>
+          <div class="rad"><div class="rad-t"><b>Zbývá</b></div><span class="rad-v" id="tZbyva"></span></div>
+          <div class="rad"><div class="rad-t"><b>Nouzový kontakt</b></div><span class="rad-v" id="tKontakt"></span></div>
+          <div class="rad"><div class="rad-t"><b>Ruční kód bez GPS</b></div><span class="rad-v" id="tKod"></span></div>
+        </div>
+
+        <h2 class="sekce">Aktuální stanoviště</h2>
+        <div class="skup form-skup">
+          <p id="aInfo" class="odst"></p>
+          <button id="btnUOdemknout" class="btn" type="button">Odemknout</button>
+          <button id="btnUPreskocit" class="btn sek" type="button">Přeskočit (písmeno se odhalí)</button>
+        </div>
+
+        <h2 class="sekce">Přehled stanovišť</h2>
+        <p class="popis pozn">Souřadnice a místa schránek jsou NEOVĚŘENÉ v terénu (návrh z OpenStreetMap).</p>
+        <div id="uSeznam" class="skup"></div>
+
+        <h2 class="sekce">Sbírka symbolů</h2>
+        <div id="uSbirka" class="skup"></div>
+
+        <h2 class="sekce">Export a reset</h2>
+        <div class="skup form-skup">
+          <button id="btnExport" class="btn sek" type="button">Exportovat postup (soubor)</button>
+          <button id="btnExportSour" class="btn sek" type="button">Exportovat souřadnice (trasa.json)</button>
+          <button id="btnReset" class="btn nebezpecne" type="button">Resetovat hru</button>
+          <textarea id="uExport" readonly rows="6" hidden></textarea>
+        </div>
+      </section>
+    </main>
+
+    <nav id="tabbar" class="tabbar" aria-label="Hlavní navigace">
+      <button type="button" data-tab="hra"><svg class="ic"><use href="#i-kompas"/></svg><span>Hra</span></button>
+      <button type="button" data-tab="cesta"><svg class="ic"><use href="#i-cesta"/></svg><span>Cesta</span></button>
+      <button type="button" data-tab="sbirka"><svg class="ic"><use href="#i-sbirka"/></svg><span>Sbírka</span></button>
+      <button type="button" data-tab="tym"><svg class="ic"><use href="#i-tym"/></svg><span>Tým</span></button>
+      <button type="button" data-tab="ucitel"><svg class="ic"><use href="#i-zamek"/></svg><span>Učitel</span></button>
+    </nav>
+
+    <div id="scrim" class="scrim" hidden></div>
+
+    <!-- ÚKOL (bottom sheet) -->
+    <div id="pUkol" class="sheet" role="dialog" aria-labelledby="uNadpis" hidden>
+      <div class="grab" id="grab"><i></i></div>
+      <div class="sheet-obsah">
+        <div id="uOdemk" class="odemk" hidden><span class="dlazdice c-green"><svg class="ic"><use href="#i-klic"/></svg></span> Odemčeno</div>
+        <h2 id="uNadpis" class="sheet-titul"></h2>
+        <p id="uZadani" class="zadani"></p>
+        <form id="fOdp" class="form-sheet">
+          <label for="iOdp">Odpověď</label>
+          <input id="iOdp" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false">
+          <button class="btn" type="submit">Zkontrolovat</button>
+        </form>
+        <p id="uChyba" class="chyba" role="alert" hidden>Zatím ne. Zkuste to znovu.</p>
+        <h3 class="sekce mala-sekce">Nápovědy</h3>
+        <ul id="uNapovedy" class="napovedy"></ul>
+        <button id="btnNapoveda" class="btn sek" type="button"></button>
+      </div>
+    </div>
+
+    <!-- SPRÁVNĚ (bottom sheet) -->
+    <div id="pReveal" class="sheet" role="dialog" aria-labelledby="rNadpis" hidden>
+      <div class="grab"><i></i></div>
+      <div class="sheet-obsah stred-obsah">
+        <div class="klavesa velka" id="rKlavesa"><strong id="rPismeno"></strong></div>
+        <h2 id="rNadpis" class="sheet-titul"></h2>
+        <p class="popis">Písmeno do věty</p>
+        <div id="rDalsi" class="skup">
+          <div class="rad"><span class="dlazdice c-red"><svg class="ic"><use href="#i-pin"/></svg></span>
+            <div class="rad-t"><b>Další stanoviště <span id="rDalsiCislo"></span></b><small id="rSour"></small></div></div>
+        </div>
+        <div id="rSymbol" class="skup rsymbol" hidden>
+          <div class="rad"><span class="dlazdice velka-dl" id="rSymDl"></span>
+            <div class="rad-t"><small>Nový symbol ve Sbírce</small><b id="rSymNazev"></b></div></div>
+        </div>
+        <div id="rRole" hidden></div>
+        <button id="btnPokracovat" class="btn" type="button">Pokračovat</button>
+      </div>
+    </div>
+  </div>
+
+  <canvas id="konfety" aria-hidden="true"></canvas>
+
+  <script src="version.js"></script>
+  <script src="config.js"></script>
+  <script src="stanovist.js"></script>
+  <script src="install.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
