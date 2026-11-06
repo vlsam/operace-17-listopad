@@ -7,6 +7,19 @@ const CONFIG = {
   // Střípek se objeví na radaru, když je hráč do RADAR_M metrů.
   RADAR_M: 150,
 
+  // Cvičná hra (učitelský režim): 7 stanovišť s úkoly 1–7 z podkladu, ale s vlastními souřadnicemi (zkouška v terénu v Hodoníně a Rohatci).
+  // Souřadnice platí jen pro cvičnou hru, ostrá trasa (trasa.json) se nemění. Dosah radaru ve cvičné hře je větší, body jsou daleko od sebe.
+  RADAR_CVIC_M: 400,
+  CVICNA_STANOVISTE: [
+    { id: 1, nazev: "Památník T.G. Masaryka", lat: 48.8556189, lng: 17.1236881 },
+    { id: 2, nazev: "Střední škola průmyslová a umělecká, Hodonín", lat: 48.8574631, lng: 17.1284283 },
+    { id: 3, nazev: "Kostel sv. Bartoloměje, Rohatec", lat: 48.8805731, lng: 17.1822506 },
+    { id: 4, nazev: "Rohatec – přístav", lat: 48.8754081, lng: 17.1919619 },
+    { id: 5, nazev: "Vysílač", lat: 48.8870581, lng: 17.1951697 },
+    { id: 6, nazev: "Rozcestí vycházky", lat: 48.8944194, lng: 17.1808361 },
+    { id: 7, nazev: "Zahrada", lat: 48.8828714, lng: 17.1795058 },
+  ],
+
   // PIN do učitelského režimu. ZMĚNIT. POZOR: PIN není bezpečnost, je to jen ochrana před omylem
   // (žák, který otevře zdrojový kód aplikace, ho vidí). Ruční kód a odpovědi zde nechráníme.
   PIN_UCITEL: "0000",

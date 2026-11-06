@@ -306,3 +306,12 @@ figure.symbol-foto { margin: 0 0 0; }
 .symbol-foto { margin: -24px -24px 0; border-radius: 0; }
 figure.symbol-foto { margin: -24px -24px 0; }
 .symbol-foto.zastupne { margin: -24px -24px 0; }
+
+.rd-okraj path { fill: #FF9F0A; stroke: #fff; stroke-width: 1.2; }
+.rd-okraj text { fill: #fff; font-size: 9px; font-weight: 700; paint-order: stroke; stroke: #0A1B45; stroke-width: 2px; }
+
+.logo-btn { background: none; border: 0; padding: 0; min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius: 12px; }
+.nav-logo-btn { position: absolute; left: 12px; top: 2px; width: 44px; height: 44px; }
+.nav-logo { position: static; }
+.home .skola .logo-btn img { width: 52px; height: 52px; }
+.verze-radek { text-align: center; font-size: 13px; color: var(--label2); margin: 32px 0 0; }
