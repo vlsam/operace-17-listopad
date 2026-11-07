@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:,">
+<title>Kvíz: 17. listopad 1939 a 1989</title>
+<style>
+:root{--rib:url("img/stuha.png");--tri-red:#D7141A;--tri-blue:#11457E;--tri-white:#fff;--bg:#F2F2F7;--card:#fff;--fg:#1C1C1E;--mut:#6C6C70;--line:#0000001a;--blue:#0A84FF;--green:#30D158;--red:#FF453A;--orange:#FF9F0A;--indigo:#5E5CE6;--shadow:0 1px 2px #0000000d,0 12px 32px #00000014;--font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI Variable Display",Inter,system-ui,sans-serif;--ease:cubic-bezier(.2,.8,.2,1)}
+@media(prefers-color-scheme:dark){:root{--bg:#000;--card:#1C1C1E;--fg:#fff;--mut:#98989F;--line:#ffffff1f;--shadow:0 1px 2px #0006,0 12px 32px #0008}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);-webkit-font-smoothing:antialiased}
+main{position:relative;max-width:760px;margin:0 auto;padding:max(20px,env(safe-area-inset-top)) max(20px,env(safe-area-inset-right)) calc(40px + env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left));font-size:19px;line-height:1.55}
+.wrap-strip{display:none}
+main::before{content:"";position:absolute;left:-124px;top:max(20px,env(safe-area-inset-top));width:103px;height:150px;background:var(--rib) no-repeat center/contain;filter:drop-shadow(0 4px 8px #0005)}
+@media(max-width:1020px){main{margin-left:0;padding-left:84px}main::before{left:8px;width:62px;height:90px}}
+.prog{position:fixed;left:0;top:0;height:4px;width:0;background:linear-gradient(90deg,var(--blue),var(--indigo),var(--red));transition:width .5s var(--ease);z-index:5}
+.hdr{display:flex;align-items:center;gap:12px;font-size:14px;line-height:1.3;color:var(--mut);margin-bottom:28px}
+.hdr .lg{background:#fff;border-radius:14px;padding:5px;display:flex;box-shadow:var(--shadow)}.hdr img{height:44px;display:block}
+.hdr b{color:var(--fg)}
+.tile{width:44px;height:44px;border-radius:27%;display:grid;place-items:center;color:#fff;background:linear-gradient(160deg,#8E8CFF,#5E5CE6);box-shadow:inset 0 1px 0 #ffffff66,0 6px 14px #5e5ce655;flex:none}
+.sf{width:58%;height:58%;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+h1{display:flex;align-items:center;gap:14px;font-size:clamp(32px,7vw,52px);line-height:1.1;letter-spacing:-.03em;font-weight:800;margin:0 0 20px}
+.meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:24px;font-size:15px;font-weight:600;color:var(--mut)}
+.chip{padding:6px 14px;border-radius:999px;background:var(--card);box-shadow:var(--shadow)}
+.qcard{background:var(--card);border-radius:28px;padding:clamp(22px,4vw,36px);box-shadow:var(--shadow);margin-bottom:20px}
+.q{font-size:clamp(23px,4.6vw,32px);font-weight:800;letter-spacing:-.02em;line-height:1.2}
+.fig{margin:20px 0 0}.fig img{width:100%;max-height:34vh;object-fit:cover;border-radius:20px;display:block}.fig img.mono{filter:grayscale(1) contrast(1.1)}
+.fig span{display:block;font-size:13px;color:var(--mut);margin-top:8px}
+.opts{display:grid;gap:12px}
+button.opt{font:600 clamp(18px,3.8vw,21px) var(--font);color:var(--fg);text-align:left;min-height:60px;padding:14px 20px;border-radius:20px;border:2px solid transparent;background:var(--card);box-shadow:var(--shadow);cursor:pointer;transition:transform .35s var(--ease),background .3s}
+button.opt:hover:not(:disabled){transform:scale(1.01)}button.opt:active:not(:disabled){transform:scale(.98)}
+button.opt:disabled{cursor:default;color:var(--fg)}
+button.opt.right{border-color:var(--green);background:color-mix(in srgb,var(--green) 22%,var(--card));animation:pop .5s var(--ease)}
+button.opt.wrong{border-color:var(--red);background:color-mix(in srgb,var(--red) 20%,var(--card));animation:shake .45s}
+.exp{background:var(--card);border-radius:24px;padding:22px 26px;margin-top:20px;box-shadow:var(--shadow);font-size:17px;animation:rise .6s var(--ease) both}
+.exp a{color:var(--blue);text-decoration:none}
+.ok{font-weight:800;font-size:1.1em;margin-bottom:6px}
+.next{margin-top:20px;display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:0 32px;border-radius:999px;border:0;background:var(--blue);color:#fff;font:700 18px var(--font);cursor:pointer;transition:transform .3s var(--ease)}
+.next:active{transform:scale(.96)}
+.res{text-align:center;padding:20px 0}
+.res .rb{display:block;width:40px;height:60px;margin:18px auto 0;background:var(--rib) no-repeat center/contain}
+.res .lg{display:inline-flex;background:#fff;border-radius:22px;padding:10px;box-shadow:var(--shadow)}.res .lg img{height:80px;display:block}
+.score{font-size:clamp(88px,26vw,170px);font-weight:800;letter-spacing:-.05em;line-height:1;margin:.2em 0;background:linear-gradient(135deg,var(--blue),var(--indigo));-webkit-background-clip:text;background-clip:text;color:transparent}
+.res p{color:var(--mut);font-size:21px;max-width:20em;margin:0 auto}
+.res .sub{font-size:14px;margin-top:20px}
+@keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+@keyframes pop{50%{transform:scale(1.04)}}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+#box>*{animation:rise .5s var(--ease) both}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="prog" id="pb"></div>
+<main>
+<div class="hdr"><span class="lg"><img src="img/logo-zs-vancurova.png" alt="Logo ZŠ Vančurova Hodonín"></span><span>Připravila<br><b>ZŠ Vančurova Hodonín</b></span></div>
+<h1><span class="tile"><svg class="sf" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/></svg></span>Kvíz: 17. listopad</h1>
+<div class="meta" id="meta"></div>
+<div id="box"></div>
+</main>
+<script>
+var L=["lehčí","střední","těžší"];
+var Q=[
+{l:0,q:"Kdy byl obsazen zbytek Československa a vznikl Protektorát Čechy a Morava?",o:["15. 3. 1939","1. 9. 1939","28. 10. 1938","8. 5. 1945"],a:0,e:"Okupace zbytku ČSR proběhla 15. března 1939.",s:"ČT edu",u:"https://edu.ceskatelevize.cz/video/4227-protektorat-cechy-a-morava"},
+{img:"img/opletal.jpg",ic:"Jan Opletal (kolem 1934), autor neznámý, volné dílo",old:1,l:0,q:"V den jakého výročí proběhla demonstrace 28. 10. 1939?",o:["Výročí vzniku Československa","Výročí Mnichovské dohody","Výročí narození T. G. Masaryka","Výročí bitvy na Bílé hoře"],a:0,e:"28. října 1918 vzniklo Československo, a proto v tento den lidé v roce 1939 demonstrovali proti okupaci.",s:"ČT24",u:"https://ct24.ceskatelevize.cz/domaci/2953574-delnik-sedlacek-zemrel-spolu-s-opletalem-na-prvni-obet-demonstrace-v-rijnu-1939-se"},
+{l:1,q:"Kdo byl při demonstraci 28. 10. 1939 zastřelen jako první?",o:["Václav Sedláček","Martin Šmíd","Jan Palach","Jan Zajíc"],a:0,e:"Václav Sedláček, dělník (jeho věk a přesné povolání se v pramenech liší). Martin Šmíd je jméno z fámy roku 1989, Palach se upálil až v roce 1969.",s:"ČT24",u:"https://ct24.ceskatelevize.cz/domaci/2953574-delnik-sedlacek-zemrel-spolu-s-opletalem-na-prvni-obet-demonstrace-v-rijnu-1939-se"},
+{l:1,q:"Na jak dlouho měly být podle vyhlášky z 17. 11. 1939 zavřeny české vysoké školy?",o:["Na 3 roky","Na 3 měsíce","Na 10 let","Na jediný týden"],a:0,e:"Vyhláška mluvila o třech letech, ale školy fakticky zůstaly zavřené do konce války.",s:"cs.wikipedia.org",u:"https://cs.wikipedia.org/wiki/Události_17._listopadu_1939"},
+{l:1,q:"Kolik studentských funkcionářů bylo v souvislosti s 17. 11. 1939 popraveno bez soudu?",o:["9","3","50","120"],a:0,e:"Popraveno bylo devět představitelů studentských spolků.",s:"cs.wikipedia.org",u:"https://cs.wikipedia.org/wiki/Události_17._listopadu_1939"},
+{l:0,q:"Do kterého koncentračního tábora byli studenti převezeni?",o:["Sachsenhausen","Osvětim","Dachau","Mauthausen"],a:0,e:"Zhruba 1 200 a více studentů bylo odvezeno do Sachsenhausenu. Počet těch, kteří zahynuli, se ve zdrojích liší (20–35).",s:"cs.wikipedia.org",u:"https://cs.wikipedia.org/wiki/Události_17._listopadu_1939"},
+{l:1,q:"Kde a kdy byl vyhlášen Mezinárodní den studentstva?",o:["V Londýně v roce 1941","V Praze v roce 1945","Ve Vídni v roce 1939","V Paříži v roce 1989"],a:0,e:"V roce 1941 v Londýně, na památku 17. 11. 1939. Přesné datum (16. nebo 17. 11.) se ve zdrojích liší.",s:"cs.wikipedia.org",u:"https://cs.wikipedia.org/wiki/Den_boje_za_svobodu_a_demokracii_a_Mezin%C3%A1rodn%C3%AD_den_studentstva"},
+{l:1,q:"Kolik lidí se 17. 11. 1989 sešlo na Albertově? (podle odhadů)",o:["Zhruba 15 000 až 50 000","Zhruba 150 až 500","Zhruba 1 500 až 5 000","Zhruba 500 000 až 800 000"],a:0,e:"Odhad StB je až 15 000, jiné zdroje uvádějí až 50 000. Rozpětí je normální: odhady počtů v davu se liší.",s:"Radio Prague International",u:"https://english.radio.cz/node/8115817"},
+{img:"img/albertov.jpg",ic:"Foto: Chmee2, CC BY-SA 2.5 (Wikimedia Commons)",old:0,l:1,q:"Kam měl podle povolení vést studentský pochod 17. 11. 1989?",o:["Na Vyšehrad","Na Pražský hrad","Na Letnou","Na Staroměstské náměstí"],a:0,e:"Povolená trasa končila na Vyšehradě. Dav ale odbočil na Národní třídu.",s:"Radio Prague International",u:"https://english.radio.cz/node/8115817"},
+{l:2,q:"Zhruba kolik zraněných bylo po zásahu 17. 11. 1989 podle komisí?",o:["Přes 500","Žádný","Asi 20 podle lékařů","Přes 5 000"],a:0,e:"Podle nezávislé lékařské komise 568 zraněných, podle parlamentní komise 592. Proto říkáme „přes 500“.",s:"cs.wikipedia.org, specialynovinky.cz",u:"https://specialynovinky.cz/17-listopad/"},
+{l:1,q:"Co se v prvních dnech po zásahu na Národní třídě ukázalo jako nepravdivá zpráva?",o:["Že zemřel student Martin Šmíd","Že byla vyhlášena generální stávka","Že odstoupil prezident","Že byly zavřeny hranice"],a:0,e:"Šmíd žil, 19. 11. se potvrdilo, že je naživu. Kdo a proč fámu šířil, se zdroje rozcházejí.",s:"specialynovinky.cz",u:"https://specialynovinky.cz/17-listopad/"},
+{img:"img/of-logo.png",ic:"Logo: P. Šťastný, volné dílo (Wikimedia Commons)",old:0,l:2,q:"Kdy vzniklo Občanské fórum a kde se sešlo?",o:["19. 11. 1989, Činoherní klub","17. 11. 1989, Albertov","21. 11. 1989, Národní divadlo","29. 12. 1989, Pražský hrad"],a:0,e:"Občanské fórum vzniklo 19. listopadu 1989 v Činoherním klubu v Praze.",s:"cs.wikipedia.org (Sametová revoluce)",u:"https://cs.wikipedia.org/wiki/Sametová_revoluce"},
+{img:"img/kubisova.jpg",ic:"Marta Kubišová, novější portrét. Foto: Ben Skála, CC BY-SA 3.0",old:0,l:1,q:"Kdo zpíval 21. 11. 1989 z balkonu na Václavském náměstí Modlitbu pro Martu?",o:["Marta Kubišová","Hana Hegerová","Helena Vondráčková","Eva Pilarová"],a:0,e:"Marta Kubišová. Píseň vznikla v roce 1968, v roce 1970 dostala zpěvačka zákaz vystupování. Text napsal Petr Rada.",s:"cs.wikipedia.org",u:"https://cs.wikipedia.org/wiki/Modlitba_pro_Martu"},
+{img:"img/kryl.jpg",ic:"Karel Kryl, 1990. Foto: Josef Karas, CC BY-SA 4.0",old:0,l:2,q:"Jak dlouho zůstal Karel Kryl po odjezdu v září 1969 v Německu?",o:["Zhruba 20 let","Asi 2 měsíce","Asi 5 let","Jen 2 roky"],a:0,e:"V září 1969 odjel na festival v NSR, požádal o azyl a zůstal asi 20 let. Jeho první album se jmenuje Bratříčku, zavírej vrátka.",s:"Radio Prague International",u:"https://english.radio.cz/node/8826444"},
+{img:"img/palach.jpg",ic:"Svíčky a květiny u pomníku, 2022. Foto: Jan_Polák, CC BY-SA 4.0",old:0,l:0,q:"V kterém roce se Jan Palach upálil na Václavském náměstí?",o:["1969","1939","1979","1989"],a:0,e:"16. ledna 1969, zemřel 19. ledna. Chtěl probudit společnost z rezignace po okupaci 1968. Je to citlivé téma, mluvíme o něm věcně.",s:"cs.wikipedia.org",u:"https://cs.wikipedia.org/wiki/Jan_Palach"}
+];
+var i=0,sc=0,box=document.getElementById("box"),meta=document.getElementById("meta"),pb=document.getElementById("pb");
+function buzz(p){try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}}
+function sh(a){a=a.slice();for(var k=a.length-1;k>0;k--){var j=Math.floor(Math.random()*(k+1)),t=a[k];a[k]=a[j];a[j]=t}return a}
+function setMeta(d){meta.innerHTML="<span class='chip'>"+(i+1)+" / "+Q.length+"</span><span class='chip'>"+L[d.l]+"</span><span class='chip'>body "+sc+"</span>"}
+function show(){
+ if(i>=Q.length)return end();
+ var d=Q[i];setMeta(d);
+ pb.style.width=(i/Q.length*100)+"%";
+ box.innerHTML="";
+ var card=document.createElement("div");card.className="qcard";
+ var q=document.createElement("div");q.className="q";q.textContent=d.q;card.appendChild(q);
+ if(d.img){var f=document.createElement("figure");f.className="fig";var im=document.createElement("img");im.src=d.img;im.alt="Fotografie k otázce";if(d.old)im.className="mono";if(d.img.indexOf("of-logo")>0)im.style.cssText="width:45%;background:#fff;padding:10px;object-fit:contain";f.appendChild(im);var sp=document.createElement("span");sp.textContent=d.ic;sp.style.display="none";f.appendChild(sp);card.appendChild(f);}
+ box.appendChild(card);
+ var wrap=document.createElement("div");wrap.className="opts";box.appendChild(wrap);
+ var opts=sh(d.o.map(function(t,k){return{t:t,ok:k===d.a}}));
+ var bt=[];
+ opts.forEach(function(o){
+  var b=document.createElement("button");b.className="opt";b.textContent=o.t;
+  b.onclick=function(){
+   bt.forEach(function(x,k){x.disabled=true;if(opts[k].ok)x.classList.add("right")});
+   var cp=card.querySelector(".fig span");if(cp)cp.style.display="block";
+   if(o.ok){sc++;buzz(12)}else{b.classList.add("wrong");buzz([30,40,30])}
+   var ex=document.createElement("div");ex.className="exp";
+   ex.innerHTML="<div class='ok'>"+(o.ok?"Správně":"Ne tak docela")+"</div>";
+   ex.appendChild(document.createTextNode(d.e+" Zdroj: "));
+   var a=document.createElement("a");a.href=d.u;a.target="_blank";a.rel="noopener";a.textContent=d.s;ex.appendChild(a);
+   box.appendChild(ex);
+   var n=document.createElement("button");n.className="next";n.textContent=i+1<Q.length?"Další otázka":"Výsledek";
+   n.onclick=function(){i++;show();window.scrollTo({top:0,behavior:"smooth"})};box.appendChild(n);
+   ex.scrollIntoView({behavior:"smooth",block:"nearest"});
+   setMeta(d);
+  };
+  bt.push(b);wrap.appendChild(b);
+ });
+}
+function end(){
+ pb.style.width="100%";meta.innerHTML="<span class='chip'>Hotovo</span>";
+ var m=sc>=13?"Skvělé, v tématu se orientuješ.":sc>=8?"Dobrý základ. Zbytek doplníš v bojovce.":"Nevadí, tohle je jen začátek. Projdi si vysvětlení a zkus to znovu.";
+ box.innerHTML="<div class='res'><span class='lg'><img src='img/logo-zs-vancurova.png' alt='Logo ZŠ Vančurova Hodonín'></span><div class='score'>"+sc+" / "+Q.length+"</div><p>"+m+"</p><div class='rb'></div><div class='sub'>Připravila ZŠ Vančurova Hodonín</div></div>";
+ var b=document.createElement("button");b.className="next";b.style.display="flex";b.style.margin="20px auto 0";b.textContent="Zkusit znovu";
+ b.onclick=function(){i=0;sc=0;show()};box.appendChild(b);buzz([20,30,20]);
+}
+show();
+</script>
+</body>
+</html>

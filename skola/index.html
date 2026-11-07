@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>17. listopad – úvod k bojovce</title>
+<link rel="icon" href="data:,">
+<style>
+:root{--rib:url("img/stuha.png");--tri-red:#D7141A;--tri-blue:#11457E;--tri-white:#fff;
+ --bg:#F2F2F7;--card:#fff;--fg:#1C1C1E;--mut:#6C6C70;--line:#0000001a;--glass:#ffffffb8;
+ --blue:#0A84FF;--green:#30D158;--red:#FF453A;--orange:#FF9F0A;--indigo:#5E5CE6;--gray:#8E8E93;
+ --shadow:0 1px 2px #0000000d,0 12px 32px #00000014;
+ --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI Variable Display",Inter,system-ui,sans-serif;
+ --ease:cubic-bezier(.2,.8,.2,1);
+ --body:clamp(17px,1.2vw + 10px,28px);
+ --h:clamp(32px,4.4vw,60px);
+}
+body.dark{--bg:#000;--card:#1C1C1E;--fg:#fff;--mut:#98989F;--line:#ffffff1f;--glass:#1c1c1eb8;--shadow:0 1px 2px #0006,0 12px 32px #0008}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:var(--font);-webkit-font-smoothing:antialiased;overscroll-behavior:none}
+.deck{position:fixed;inset:0;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-start;
+ padding:max(32px,env(safe-area-inset-top)) max(7vw,env(safe-area-inset-right),24px) calc(140px + env(safe-area-inset-bottom)) max(7vw,env(safe-area-inset-left),132px);
+ overflow-y:auto;font-size:var(--body);line-height:1.55;background:var(--bg);
+ opacity:0;visibility:hidden;transform:translateX(5vw) scale(.98);transition:opacity .6s var(--ease),transform .6s var(--ease),visibility 0s .6s}
+.slide.past{transform:translateX(-5vw) scale(.98)}
+.slide.active{opacity:1;visibility:visible;transform:none;transition:opacity .6s var(--ease),transform .6s var(--ease),visibility 0s}
+.wrap{width:100%;max-width:1180px;margin:0 auto;position:relative;min-height:100%;display:flex;flex-direction:column;justify-content:flex-start}
+.wrap::before{content:"";position:absolute;left:-124px;top:0;width:103px;height:150px;background:var(--rib) no-repeat center/contain;filter:drop-shadow(0 4px 8px #0005)}
+.cover .wrap{justify-content:flex-end}
+.slide.cover{overflow:hidden}
+@media(max-width:700px){.wrap::before{left:-72px;width:62px;height:90px}}
+h1,h2{margin:0;font-weight:800;letter-spacing:-.03em;line-height:1.1}
+h1{font-size:clamp(48px,8vw,112px);letter-spacing:-.04em}
+h2{font-size:var(--h);margin-bottom:.45em}
+h3{margin:0;font-size:1em;font-weight:700;letter-spacing:-.01em}
+p{margin:0}
+.eyebrow{display:flex;align-items:center;gap:.6em;font-size:.8em;font-weight:700;letter-spacing:.02em;color:var(--mut);margin-bottom:1.3em;text-transform:uppercase}
+.lead{font-size:1.15em;font-weight:500;color:var(--mut);max-width:28em;line-height:1.5;letter-spacing:-.01em}
+.big{font-size:var(--h);font-weight:800;letter-spacing:-.04em;line-height:.95;background:linear-gradient(135deg,var(--c1,var(--blue)),var(--c2,var(--indigo)));-webkit-background-clip:text;background-clip:text;color:transparent}
+.num{font-size:1.9em;font-weight:800;letter-spacing:-.03em;line-height:1;background:linear-gradient(135deg,var(--c1,var(--blue)),var(--c2,var(--indigo)));-webkit-background-clip:text;background-clip:text;color:transparent}
+.card{background:var(--card);border-radius:28px;padding:clamp(22px,3vw,40px);box-shadow:var(--shadow);position:relative;overflow:hidden}
+.grid{display:grid;gap:clamp(16px,2vw,28px)}
+.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+.sp-a{grid-template-columns:1.3fr 1fr}.sp-b{grid-template-columns:1.4fr 1fr}.sp-c{grid-template-columns:1fr 1.2fr}
+@media(max-width:860px){.g3,.g4,.g2,.sp-a,.sp-b,.sp-c{grid-template-columns:1fr}.g4.keep{grid-template-columns:1fr 1fr}}
+.mut{color:var(--mut)}
+.small{font-size:.72em;color:var(--mut)}
+.src{font-size:max(13px,.5em);color:var(--mut);margin-top:1em}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+.pill{display:inline-flex;align-items:center;gap:.5em;min-height:48px;padding:0 1.1em;border-radius:999px;background:var(--glass);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border:1px solid var(--line);color:var(--fg);font:600 .72em var(--font);cursor:pointer;transition:transform .3s var(--ease)}
+.pill:hover{text-decoration:none;transform:scale(1.03)}.pill:active{transform:scale(.97)}
+.pill.solid{background:var(--blue);color:#fff;border-color:transparent}
+.tag{display:inline-block;padding:.25em .8em;border-radius:999px;background:#ff9f0a26;color:var(--orange);font-weight:700;font-size:.7em}
+.tn{display:none}
+body.notes .tn{display:block;margin-top:14px;padding:12px 16px;border-radius:18px;background:#ff9f0a26;color:var(--fg);font-size:max(14px,.6em);line-height:1.35}
+/* ikony */
+.sf{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.tile{--g1:#5AC8FA;--g2:#0A84FF;flex:none;width:2.1em;height:2.1em;border-radius:27%;display:inline-grid;place-items:center;color:#fff;background:linear-gradient(160deg,var(--g1),var(--g2));box-shadow:inset 0 1px 0 #ffffff66,0 6px 14px color-mix(in srgb,var(--g2) 40%,transparent);font-size:1em}
+.tile .sf{width:58%;height:58%}
+.tile.green{--g1:#63E683;--g2:#30D158}.tile.red{--g1:#FF8A80;--g2:#FF453A}.tile.orange{--g1:#FFC046;--g2:#FF9F0A}.tile.indigo{--g1:#8E8CFF;--g2:#5E5CE6}.tile.gray{--g1:#A1A1A6;--g2:#636366;box-shadow:inset 0 1px 0 #ffffff55,0 6px 14px #0003}
+.tile.sm{font-size:.8em}.tile.xl{font-size:1.3em}
+.vicon{display:block;margin:0 auto;width:min(100%,512px,26vh);aspect-ratio:1;height:auto}
+/* fotky */
+.photo{display:block;width:100%;object-fit:cover;border-radius:24px}
+.mono img,img.mono{filter:grayscale(1) contrast(1.12) brightness(.96)}
+.grain{position:relative;overflow:hidden;border-radius:24px}
+.grain::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.22;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+.cr{display:block;font-size:max(12px,.48em);color:var(--mut);margin-top:.5em;line-height:1.3}
+.bgfull{position:absolute;inset:0;z-index:-1}
+.bgfull img{display:block;width:100%;height:100%;object-fit:cover}
+.bgfull::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#000f 0%,#000c 55%,#0008 100%)}
+.slide.dark-photo{color:#fff;--mut:#d1d1d6;--card:#1c1c1ecc;--fg:#fff;isolation:isolate}
+.slide.dark-photo .card{backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);box-shadow:none;border:1px solid #ffffff22}
+.slide.dark-photo .cr.corner{position:absolute;left:max(5vw,16px);bottom:calc(84px + env(safe-area-inset-bottom));margin:0;color:#e5e5ea;background:#0006;padding:3px 10px;border-radius:999px;backdrop-filter:blur(10px)}
+/* kvíz */
+.quiz{max-width:820px}
+.quiz .q{font-size:1.5em;font-weight:800;letter-spacing:-.02em;margin-bottom:.9em;line-height:1.2}
+.opt{display:block;width:100%;text-align:left;min-height:60px;margin:14px 0;padding:.7em 1.1em;border-radius:20px;border:2px solid transparent;background:var(--card);color:var(--fg);font:600 .9em var(--font);box-shadow:var(--shadow);cursor:pointer;transition:transform .35s var(--ease),background .3s}
+.opt:hover{transform:scale(1.01)}.opt:active{transform:scale(.985)}
+.opt.right{border-color:var(--green);background:color-mix(in srgb,var(--green) 22%,var(--card));animation:pop .5s var(--ease)}
+.opt.wrong{border-color:var(--red);background:color-mix(in srgb,var(--red) 20%,var(--card));animation:shake .45s}
+.exp{font-size:.75em;color:var(--mut);min-height:3.6em;margin-top:1em;line-height:1.5}
+/* časová osa */
+.axw{overflow-x:auto;flex:none}
+.ax{position:relative;height:176px;min-width:780px;--mid:88px;flex:none}
+.ax .ln{position:absolute;top:calc(var(--mid) - 2px);height:4px;border-radius:2px;background:var(--gray)}
+.ax .brk{position:absolute;top:calc(var(--mid) - 14px);width:5%;text-align:center;font-weight:800;color:var(--mut);font-size:.8em;line-height:1}
+.ax svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.ax svg line{stroke:var(--gray);stroke-width:1.2;opacity:.7}
+.ax .pt{position:absolute;top:var(--mid);width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;border:3px solid var(--gray);background:var(--card);padding:0;cursor:pointer;transition:transform .25s var(--ease)}
+.ax .pt.b{border-color:var(--red)}
+.ax .pt:hover,.ax .pt[aria-pressed=true]{transform:scale(1.35);background:var(--blue);border-color:var(--blue)}
+.ax .lb{position:absolute;width:17%;transform:translateX(-50%);border:0;background:var(--card);color:var(--fg);box-shadow:var(--shadow);border-radius:12px;padding:6px 8px;font:500 max(12px,.5em) var(--font);line-height:1.25;text-align:center;cursor:pointer}
+.ax .lb b{display:block;font-weight:800}
+.ax .lb.u{bottom:calc(176px - var(--mid) + 22px)}.ax .lb.d{top:calc(var(--mid) + 22px)}
+.ax .lb[aria-pressed=true]{background:var(--blue);color:#fff}
+#tld{font-size:.85em;min-height:2.6em;padding:16px 24px;font-weight:500}
+/* seznam jako iOS */
+.list{list-style:none;margin:0;padding:0}
+.list li{display:flex;gap:1em;align-items:baseline;padding:.7em 0;border-top:1px solid var(--line);font-size:.8em;line-height:1.4}
+.list li:first-child{border-top:0}
+.list b{min-width:4.6em;color:var(--mut);font-weight:700;flex:none}
+.list.tight li{padding:.45em 0}.cmp .list li{padding:.42em 0;font-size:.7em}.cmp h2{margin-bottom:.35em}.cmp .card h3{font-size:1.2em;margin-bottom:.4em;display:flex;align-items:center;gap:.5em}
+.cmp .a{background:#1c1c1e;color:#fff;--mut:#98989F;--line:#ffffff22}
+.cmp .a h3{color:#d1d1d6}
+.cmp .b{background:linear-gradient(160deg,color-mix(in srgb,var(--blue) 14%,var(--card)),color-mix(in srgb,var(--red) 10%,var(--card)))}
+body.dark .cmp .a{background:#2c2c2e}
+.list em{font-style:normal;display:block;font-size:.72em;color:var(--mut);font-weight:600}
+/* ovládání */
+.bar{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:10;display:flex;align-items:center;gap:8px;padding:8px;border-radius:999px;background:var(--glass);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);border:1px solid var(--line);box-shadow:var(--shadow);font-size:16px;max-width:calc(100vw - 16px);transition:transform .5s var(--ease),opacity .5s}
+body.idle .bar{transform:translate(-50%,160%);opacity:0}
+.bar button{height:48px;min-width:48px;border-radius:999px;border:0;background:transparent;color:var(--fg);font:600 16px var(--font);cursor:pointer;padding:0 14px;transition:background .25s,transform .25s var(--ease)}
+.bar button:hover{background:var(--line)}.bar button:active{transform:scale(.94)}
+.bar .sf{font-size:22px}
+.seg{display:flex;padding:3px;border-radius:999px;background:var(--line)}
+.seg button{height:42px;font-size:15px;padding:0 14px}
+.seg button.on{background:var(--card);box-shadow:0 1px 4px #0003}
+.cnt{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--mut);font-weight:600;padding:0 6px;font-size:15px}
+.prog{position:fixed;left:0;top:0;height:3px;z-index:11;background:linear-gradient(90deg,var(--blue),var(--indigo),var(--red));transition:width .5s var(--ease)}
+.mark,.logo-br{display:flex;align-items:center;gap:10px;font-size:12px;line-height:1.25;color:var(--mut)}
+.mark{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:calc(18px + env(safe-area-inset-bottom));z-index:9;padding:4px 14px 4px 4px;border-radius:16px;background:var(--glass);backdrop-filter:blur(16px) saturate(160%);-webkit-backdrop-filter:blur(16px) saturate(160%);border:1px solid var(--line);color:var(--fg);transition:opacity .4s}
+.mark b,.logo-br b{color:var(--fg);display:block}.mark{color:var(--fg)}
+.mark .lg,.logo-br .lg{background:#fff;border-radius:10px;padding:3px;display:flex;box-shadow:0 2px 10px #0003}
+.mark img{height:36px;display:block}
+.logo-br{position:absolute;right:0;bottom:0;font-size:13px;color:#e5e5ea}.logo-br b{color:#fff}.logo-br img{height:48px;display:block}
+.phc img,.phc .phimg{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:18px;margin-bottom:1em}.phc .phimg{height:auto}.phc h3{font-size:1.2em}.phc p{margin-top:.4em;font-size:.82em}.phc .cr{margin-top:.7em}
+.rb{width:21px;height:32px;background:var(--rib) no-repeat center/contain;flex:none;margin:0 6px 0 8px}
+@media(max-width:700px){.logo-br{position:static;margin-top:1.4em}.hint{display:none}.slide{padding-bottom:calc(150px + env(safe-area-inset-bottom))!important}.mark{bottom:calc(88px + env(safe-area-inset-bottom));right:14px}.mark .t{display:none}.logo-br .t{display:none}}
+body.first .mark{opacity:0;pointer-events:none}
+.slide.compact.dem .wrap>*+*{margin-top:1em}.lead.one{max-width:none}@media(min-width:861px){.lead.one{font-size:clamp(13px,1.45vw,21px);white-space:nowrap}}
+.timer{display:flex;align-items:center;gap:16px;margin-top:1em}
+.timer #tm{font-size:2.2em;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+svg.map{width:100%;height:auto;display:block}
+svg.map text{font:700 15px var(--font);fill:var(--fg)}
+/* vzdušnost */
+.wrap>*+*{margin-top:1.4em}
+.wrap>.eyebrow+*{margin-top:0}
+.wrap.tw>*+*{margin-top:.9em}
+.wrap>h2+*,.wrap>.big+*{margin-top:1em}
+.timer{margin-top:1.2em}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes pop{50%{transform:scale(1.04)}}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes dash{to{stroke-dashoffset:-48}}
+.slide.active .wrap>*{animation:rise .8s var(--ease) both}
+.slide.active .wrap>*:nth-child(2){animation-delay:.07s}.slide.active .wrap>*:nth-child(3){animation-delay:.14s}.slide.active .wrap>*:nth-child(4){animation-delay:.21s}.slide.active .wrap>*:nth-child(n+5){animation-delay:.28s}
+.route{stroke-dasharray:12 9;animation:dash 2.5s linear infinite}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@media(max-width:700px){.slide{padding-left:max(76px,env(safe-area-inset-left))!important;padding-right:max(20px,env(safe-area-inset-right))!important}#fs,#nt{display:none}.bar{gap:2px;padding:6px}.bar button{padding:0 10px}.seg button{padding:0 10px}.cnt{display:none}.slide{padding-bottom:calc(96px + env(safe-area-inset-bottom))}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+ <symbol id="i-flag" viewBox="0 0 24 24"><path d="M6 21V4"/><path d="M6 5h11.5l-2.5 3.8 2.5 3.7H6"/></symbol>
+ <symbol id="i-mega" viewBox="0 0 24 24"><path d="M4 10v4a1 1 0 0 0 1 1h2.5L14 19.5v-15L7.5 9H5a1 1 0 0 0-1 1z"/><path d="M17.5 9.2a4 4 0 0 1 0 5.6"/></symbol>
+ <symbol id="i-candle" viewBox="0 0 24 24"><rect x="7.5" y="11" width="9" height="9.5" rx="2.2"/><path d="M12 2.5c2.2 2.3 2.8 4 0 6.2-2.8-2.2-2.2-3.9 0-6.2z"/></symbol>
+ <symbol id="i-door" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2.5"/><circle cx="14.8" cy="12" r=".6"/></symbol>
+ <symbol id="i-cap" viewBox="0 0 24 24"><path d="M2.5 9.5 12 5l9.5 4.5L12 14z"/><path d="M6.5 11.8V16c0 1.4 2.5 3 5.5 3s5.5-1.6 5.5-3v-4.2"/><path d="M21.5 9.5V14"/></symbol>
+ <symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.5" cy="16.5" r="3.5"/><path d="M10 14 19.5 4.5"/><path d="M16.5 7.5 19 10"/><path d="M13.5 10.5 15.5 12.5"/></symbol>
+ <symbol id="i-note" viewBox="0 0 24 24"><path d="M9 17.5V6.5l10-2v11"/><circle cx="6.5" cy="17.5" r="2.5"/><circle cx="16.5" cy="15.5" r="2.5"/></symbol>
+ <symbol id="i-doc" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/></symbol>
+ <symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 4v16M8 20h8M5 7.5h14"/><path d="M5 7.5 2.7 13a2.4 2.4 0 0 0 4.6 0zM19 7.5 16.7 13a2.4 2.4 0 0 0 4.6 0z"/></symbol>
+ <symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 20c.8-3.5 3.6-5.5 7.5-5.5s6.7 2 7.5 5.5"/></symbol>
+ <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13L19 12z"/></symbol>
+ <symbol id="i-ear" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="2"/><rect x="17" y="14" width="4" height="6" rx="2"/></symbol>
+ <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s6.5-5.6 6.5-11a6.5 6.5 0 0 0-13 0C5.5 15.4 12 21 12 21z"/><circle cx="12" cy="10" r="2.3"/></symbol>
+ <symbol id="i-v" viewBox="0 0 24 24"><path d="M5.5 4.5 12 19.5 18.5 4.5"/></symbol>
+ <symbol id="i-left" viewBox="0 0 24 24"><path d="m14.5 5-7 7 7 7"/></symbol>
+ <symbol id="i-right" viewBox="0 0 24 24"><path d="m9.5 5 7 7-7 7"/></symbol>
+ <symbol id="i-full" viewBox="0 0 24 24"><path d="M4 9V5h4M20 9V5h-4M4 15v4h4M20 15v4h-4"/></symbol>
+ <symbol id="i-note2" viewBox="0 0 24 24"><rect x="4" y="3.5" width="16" height="17" rx="3.5"/><path d="M8 9h8M8 13h5"/></symbol>
+</svg>
+<main class="deck" id="deck">
+
+<!-- 1 -->
+<section class="slide dark-photo cover">
+  <div class="bgfull"><img src="img/vaclavak.jpg" alt="Václavské náměstí v listopadu 1989, noční demonstrace"></div>
+  <div class="wrap tw">
+    <div class="eyebrow">Úvod před bojovkou · Operace 17. listopad · Hodonín</div>
+    <h1>17. listopad.</h1>
+    <p class="lead" style="color:#fff;font-size:1.5em;font-weight:700;letter-spacing:-.02em">Dvakrát stejné datum.<br>Dvě generace studentů.</p>
+    <p style="margin-top:1.4em"><a class="pill solid" href="kviz.html"><svg class="sf"><use href="#i-doc"/></svg>Kvíz: 17. listopad</a></p>
+    <div class="logo-br"><span class="lg"><img src="img/logo-zs-vancurova.png" alt="Logo ZŠ Vančurova Hodonín"></span><span class="t">Připravila<b>ZŠ Vančurova Hodonín</b></span></div>
+  </div>
+  <span class="cr corner">Foto: RobbieIanMorrison, CC BY 4.0 (Wikimedia Commons)</span>
+</section>
+
+<!-- 3 -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow"><span class="tile gray sm"><svg class="sf"><use href="#i-flag"/></svg></span>1939</div>
+    <div class="big" style="--c1:#aeaeb2;--c2:#636366">15. 3. 1939</div>
+    <h2>Země pod okupací.</h2>
+    <p class="lead">Německo obsadilo zbytek Československa. Vznikl Protektorát Čechy a Morava. V březnu 1939 se u nás začalo jezdit vpravo.</p>
+    <p><a class="pill solid" href="https://edu.ceskatelevize.cz/video/4227-protektorat-cechy-a-morava" target="_blank" rel="noopener"><svg class="sf"><use href="#i-play"/></svg>ČT edu · Protektorát · 3:48</a></p>
+    <div class="tn">Jízda vpravo: v protektorátu od 17. 3. 1939, v Praze od 26. 3. 1939 (Echo24, e15) – na slidu proto jen „v březnu 1939“. Učitel: zhlédni video předem. Časy úseků neuvádíme (neověřeno). Zdroje: ČT edu, JSNS – Nacistická okupace 15. 3. 1939.</div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="slide compact dem">
+  <div class="wrap">
+    <div class="eyebrow"><span class="tile gray sm"><svg class="sf"><use href="#i-mega"/></svg></span>28. října 1939</div>
+    <h2>Demonstrace.</h2>
+    <p class="lead">Výročí vzniku Československa. Při zásahu padly výstřely.</p>
+    <div class="grid g2">
+      <div class="card"><div class="tile gray"><svg class="sf"><use href="#i-person"/></svg></div><h3 style="margin-top:.6em;font-size:1.2em">Václav Sedláček</h3><p class="mut" style="margin:.2em 0 0">dělník · zemřel na místě</p></div>
+      <div class="card" style="display:flex;gap:1em;align-items:center">
+        <div class="grain" style="width:34%;flex:none"><img class="photo mono" src="img/opletal.jpg" alt="Jan Opletal, portrét kolem roku 1934"></div>
+        <div><h3 style="font-size:1.2em">Jan Opletal</h3><p class="mut" style="margin:.2em 0 0">student medicíny · zemřel 11. 11. 1939 ve věku 24 let</p><span class="cr">Foto: kolem 1934, autor neznámý, volné dílo (Wikimedia Commons)</span></div>
+      </div>
+    </div>
+    <p class="lead" style="font-size:.95em">Proč si pamatujeme hlavně studenta?</p>
+    <p><a class="pill solid" href="https://www.youtube.com/watch?v=7PwJg0OlIoA" target="_blank" rel="noopener"><svg class="sf"><use href="#i-play"/></svg>ČT24 · 1939 a 1989 · 2:53</a></p>
+    <div class="tn">Učitel: zhlédni video předem; ukazuje Opletala i Sedláčka jako oběti 28. 10. 1939 a je podnětem k otázce, proč se pamatuje hlavně student (symbol, svátek studentů, pohřeb se stal protestem). Historik Z. M. Duda: oba „mysleli naprosto stejně“. Podle ČT24 přišlo až kolem 100 000 lidí – mediální odhad bez odborné opory. Povolání a věk Sedláčka se ve zdrojích liší, říkáme jen „dělník“.</div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="slide compact">
+  <div class="wrap">
+    <div class="eyebrow"><span class="tile gray sm"><svg class="sf"><use href="#i-door"/></svg></span>17. listopadu 1939 <span class="tag">vážné téma</span></div>
+    <h2>Školy se zavřely.</h2>
+    <p class="lead">Pohřeb Jana Opletala (15. 11.) se změnil v protest. V noci na 17. 11. obsadili koleje v Praze, Brně a Příbrami.</p>
+    <div class="grid g3">
+      <div class="card"><div class="num" style="--c1:#aeaeb2;--c2:#636366">9</div><p style="margin:.3em 0 0">funkcionářů popraveno bez soudu</p></div>
+      <div class="card"><div class="num" style="--c1:#aeaeb2;--c2:#636366">1 200+</div><p style="margin:.3em 0 0">studentů odvezeno do Sachsenhausenu</p></div>
+      <div class="card"><div class="num" style="--c1:#aeaeb2;--c2:#636366">3 roky</div><p style="margin:.3em 0 0">VŠ zavřeny, fakticky do konce války</p></div>
+    </div>
+    <p class="small">Zatčeno více než tisíc až dva tisíce studentů, zahynulo jich 20 až 35 (zdroje se liší). Mluvíme věcně, bez podrobností.</p>
+    <div class="tn">Zdroje: cs.wikipedia.org (Události 17. listopadu 1939), specialynovinky.cz, cenyjanaopletala.cz, ČT24. Přesná čísla ověř. Foto pohřbu: dobová fotografie (Dějiny Prahy, 1964), autor neznámý, volné dílo – podle popisu Commons pohřeb J. Opletala.</div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="slide compact">
+  <div class="wrap">
+    <div class="eyebrow"><span class="tile indigo sm"><svg class="sf"><use href="#i-scale"/></svg></span>Diskuse · 4 min</div>
+    <h2>Jak se rozhodnout?</h2>
+    <p class="lead">Je listopad 1939. Shromáždění může být nebezpečné. Nehledáme správnou odpověď, nikdo nemusí mluvit o sobě.</p>
+    <div class="grid g3">
+      <div class="card"><div class="tile orange"><svg class="sf"><use href="#i-person"/></svg></div><h3 style="margin-top:.6em">Spolužáci jdou.</h3><p class="mut" style="margin:.2em 0 0">Je to nebezpečné. Jdeš?</p></div>
+      <div class="card"><div class="tile blue"><svg class="sf"><use href="#i-scale"/></svg></div><h3 style="margin-top:.6em">Co zvažuješ?</h3><p class="mut" style="margin:.2em 0 0">Strach, rodina, hodnoty, následky.</p></div>
+      <div class="card"><div class="tile green"><svg class="sf"><use href="#i-mega"/></svg></div><h3 style="margin-top:.6em">Odvaha, nebo rozum?</h3><p class="mut" style="margin:.2em 0 0">Může být odpovědné i nejít?</p></div>
+    </div>
+    <div class="timer"><span id="tm">2:00</span><button class="pill" id="tmb">Start</button></div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="slide">
+  <div class="wrap"><div class="eyebrow"><span class="tile indigo sm"><svg class="sf"><use href="#i-doc"/></svg></span>Minikvíz 1</div>
+  <div class="quiz" data-id="q1"></div></div>
+</section>
+
+<!-- 8 -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow"><span class="tile gray sm"><svg class="sf"><use href="#i-cap"/></svg></span>Mezinárodní den studentstva</div>
+    <div class="big" style="--c1:#aeaeb2;--c2:#636366">1941</div>
+    <h2>Londýn.</h2>
+    <p class="lead">České školy byly zavřené, ale studenti na ně nezapomněli. V Londýně, kde působila Mezinárodní studentská rada, vyhlásili 17. listopad Mezinárodním dnem studentstva – na památku 1939. Přesné datum (16. nebo 17. 11.) se ve zdrojích liší.</p>
+    <div class="card" style="max-width:900px"><b>Dnes:</b> Den boje za svobodu a demokracii a Mezinárodní den studentstva (název od 2019). Jedno datum, dvě události: <b>1939</b> a <b>1989</b>.</div>
+    <p class="src">Zdroje: cs.wikipedia.org, en.wikipedia.org (International Students' Day)</p>
+  </div>
+</section>
+
+<!-- 9 -->
+<section class="slide dark-photo compact">
+  <div class="bgfull"><img src="img/palach.jpg" alt="Svíčky a květiny u pomníku Jana Palacha a Jana Zajíce"></div>
+  <div class="wrap tw">
+    <div class="eyebrow">Mezi dvěma 17. listopady <span class="tag">těžké téma</span></div>
+    <h2>Jan Palach.</h2>
+    <p class="lead">16. 1. 1969 zvolil krajní protest proti rezignaci společnosti po okupaci 1968. Zemřel 19. 1. Pohřeb 25. 1.: desítky tisíc lidí (odhady se liší).<br><b style="color:#fff">Není to vzor k následování. Existují bezpečné způsoby, jak se ozvat.</b></p>
+    <div class="tn">Učitel: téma sebeupálení je velmi citlivé. Předem upozorni, podej věcně, bez podrobností, nabídni možnost nezapojit se a stáhnout se (Linka bezpečí 116 111, zdarma, nonstop). Zdroje: cs.wikipedia.org, RFE/RL, Echo24.</div>
+  </div>
+  <span class="cr corner">Foto: Jan_Polák, CC BY-SA 4.0 (Wikimedia Commons), 16. 1. 2022</span>
+</section>
+
+<!-- 10 -->
+<section class="slide compact">
+  <div class="wrap">
+    <div class="eyebrow"><span class="tile red sm"><svg class="sf"><use href="#i-note"/></svg></span>Hudba · proč může píseň „vadit“ režimu?</div>
+    <h2>Písně, které vadily.</h2>
+    <div class="grid g2">
+      <div class="card" style="display:flex;flex-direction:column;gap:1em;justify-content:space-between">
+        <div style="display:flex;gap:1em;align-items:center">
+          <img class="photo" src="img/kubisova.jpg" alt="Marta Kubišová, novější portrét" style="width:34%;aspect-ratio:1;flex:none;object-position:top">
+          <div><h3 style="font-size:1.2em">Marta Kubišová</h3><p style="margin:.2em 0">Modlitba pro Martu (1968)</p><p class="mut" style="margin:0">1970 zákaz vystupování. 21. 11. 1989 zpívá z balkonu.</p></div>
+        </div>
+        <a class="pill solid" style="justify-content:center" href="https://www.youtube.com/watch?v=npMZ7UxwVgU" target="_blank" rel="noopener"><svg class="sf"><use href="#i-play"/></svg>Modlitba pro Martu · 1989 · 2:40</a>
+      </div>
+      <div class="card" style="display:flex;flex-direction:column;gap:1em;justify-content:space-between">
+        <div style="display:flex;gap:1em;align-items:center">
+          <img class="photo" src="img/kryl.jpg" alt="Karel Kryl s kytarou, rok 1990" style="width:34%;aspect-ratio:1;flex:none;object-position:top">
+          <div><h3 style="font-size:1.2em">Karel Kryl</h3><p style="margin:.2em 0">Bratříčku, zavírej vrátka (1969)</p><p class="mut" style="margin:0">Píseň zakázána v březnu 1969. V září odjel do NSR na 20 let.</p></div>
+        </div>
+        <a class="pill solid" style="justify-content:center" href="https://www.youtube.com/watch?v=L07nKHHX58Q" target="_blank" rel="noopener"><svg class="sf"><use href="#i-play"/></svg>Bratříčku, zavírej vrátka</a>
+      </div>
+    </div>
+    <span class="cr">Foto: B. Skála (CC BY-SA 3.0), J. Karas (CC BY-SA 4.0)</span>
+    <div class="tn">Modlitba pro Martu: hudba Jindřich Brabec (jeden zdroj uvádí „Jiří“), text Petr Rada. Učitel: zhlédni předem. Nahrávky jsou neoficiální, nahrávka Kryla je neoficiální (kanál „Šedesátá léta“), délku a kvalitu ověř přehráním. Texty písní nekopírujeme.</div>
+  </div>
+</section>
+
+<!-- 11 -->
+<section class="slide">
+  <div class="wrap"><div class="eyebrow"><span class="tile indigo sm"><svg class="sf"><use href="#i-doc"/></svg></span>Minikvíz 2</div>
+  <div class="quiz" data-id="q2"></div></div>
+</section>
+
+<!-- 12 -->
+<section class="slide compact">
+  <div class="wrap">
+    <div class="eyebrow"><span class="tile red sm"><svg class="sf"><use href="#i-mega"/></svg></span>17. listopadu 1989</div>
+    <h2>Albertov. Národní třída.</h2>
+    <div class="grid sp-a" style="align-items:center">
+      <div class="card" style="padding:clamp(12px,1.5vw,20px)">
+        <svg class="map" viewBox="0 0 400 270" role="img" aria-label="Schéma trasy Albertov, Vyšehrad, Karlovo náměstí, Národní třída">
+          <path d="M92 0C68 66 118 108 88 168S58 250 78 290" fill="none" stroke="#64D2FF" stroke-width="22" stroke-linecap="round" opacity=".55"/>
+          <text x="14" y="38" style="fill:#32ADE6;font-size:13px">Vltava</text>
+          <path class="route" d="M290 232L105 244" stroke="#0A84FF" stroke-width="5" stroke-linecap="round" fill="none"/>
+          <path class="route" d="M290 232L215 165L130 72" stroke="#FF453A" stroke-width="5" stroke-linecap="round" fill="none"/>
+          <circle cx="290" cy="232" r="10" fill="#FF453A"/><text x="232" y="262">Albertov (start)</text>
+          <circle cx="105" cy="244" r="8" fill="#0A84FF"/><text x="115" y="266">Vyšehrad</text>
+          <circle cx="215" cy="165" r="6" fill="#8E8E93"/><text x="226" y="160">Karlovo nám.</text>
+          <circle cx="130" cy="72" r="10" fill="#FF453A"/><text x="144" y="62">Národní třída</text>
+          <circle cx="262" cy="52" r="6" fill="#8E8E93"/><text x="272" y="44">Václavské nám.</text>
+        </svg>
+        <span class="cr" style="margin-top:.4em">Schéma, ne měřítková mapa. Modře povolená trasa, červeně kudy dav šel dál.</span>
+      </div>
+      <div class="grid" style="margin:0">
+        <div class="card"><div class="num" style="--c1:#FF9F0A;--c2:#FF453A">15–50 tis.</div><p class="small" style="margin-top:.5em">účastníků (podle odhadů)</p></div>
+        <div class="card"><div class="num" style="--c1:#FF453A;--c2:#FF9F0A">500+</div><p class="small" style="margin-top:.5em">zraněných (568 a 592 podle dvou komisí)</p></div>
+      </div>
+    </div>
+    <p class="src">Povolená trasa končila na Vyšehradě, dav šel na Národní. Zdroje: cs.wikipedia.org, Radio Prague Int., specialynovinky.cz.</p>
+  </div>
+</section>
+
+<!-- 12b -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow"><span class="tile orange sm"><svg class="sf"><use href="#i-doc"/></svg></span>Ověřuj informace</div>
+    <h2>Fáma o Šmídovi.</h2>
+    <p class="lead">Po zásahu se šířila zpráva, že zemřel student Martin Šmíd. Byla nepravdivá: 19. 11. se potvrdilo, že žije.</p>
+    <div class="card" style="max-width:820px"><h3>Jak ověřit takovou zprávu?</h3><p class="mut" style="margin-top:.5em;font-size:.85em">Fámu podle některých zdrojů vymyslela Drahomíra Dražská; zda ji někdo využil, se zdroje rozcházejí.</p></div>
+    <div class="grid g2" style="gap:12px"><a class="pill solid" style="justify-content:center" href="https://www.youtube.com/watch?v=7PwJg0OlIoA" target="_blank" rel="noopener"><svg class="sf"><use href="#i-play"/></svg>ČT24 · 1939 a 1989 · 2:53</a><a class="pill" style="justify-content:center" href="https://www.youtube.com/watch?v=M2w6dJQzb_M" target="_blank" rel="noopener"><svg class="sf"><use href="#i-play"/></svg>Paměť národa · 5:52</a></div>
+    <div class="tn">Učitel: zhlédni videa předem. Zdroje: specialynovinky.cz, ČT24.</div>
+  </div>
+</section>
+
+<!-- 13 -->
+<section class="slide compact">
+  <div class="wrap">
+    <div class="eyebrow"><span class="tile blue sm"><svg class="sf"><use href="#i-doc"/></svg></span>Listopad – prosinec 1989</div>
+    <h2>Za týden jiná země.</h2>
+    <div class="grid sp-b" style="align-items:center">
+      <div class="card"><ul class="list tight">
+        <li><b>19. 11.</b>Vzniká Občanské fórum</li>
+        <li><b>20. 11.</b>Stávky škol, demonstrace na Václavském náměstí</li>
+        <li><b>21. 11.</b>Havel z balkonu, zpívá Kubišová</li>
+        <li><b>24. 11.</b>Rezignuje vedení KSČ</li>
+        <li><b>27. 11.</b>Generální stávka (12–14 h)</li>
+        <li><b>29. 12.</b>Havel zvolen prezidentem</li>
+      </ul></div>
+      <div><img class="photo" src="img/havel-dubcek.jpg" alt="Václav Havel a Alexander Dubček se objímají v Laterně magice, 24. 11. 1989" style="aspect-ratio:16/11;object-position:50% 40%"><span class="cr">Havel a Dubček v Laterně magice, 24. 11. 1989. Foto: Jaroslav Kučera, CC BY-SA 3.0 (Wikimedia Commons), výřez bez úprav obsahu</span></div>
+    </div>
+    <p class="lead one">Revoluci říkáme „sametová“ – po 17. 11. proběhla s minimem násilí.<br><b style="color:var(--fg)">Proč asi?</b></p>
+    <div class="tn">Zdroje: cs.wikipedia.org (Sametová revoluce), specialynovinky.cz</div>
+  </div>
+</section>
+
+<!-- 15a -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow"><span class="tile orange sm"><svg class="sf"><use href="#i-key"/></svg></span>Symboly 1989 · 1/2</div>
+    <h2>Symboly 17. listopadu.</h2>
+    <div class="grid g3">
+      <div class="card phc"><img src="img/symboly/symbol-v.jpg" alt="Ruka se zdviženými dvěma prsty v davu, listopad 1989" style="object-position:70% 40%"><h3>Znak V</h3><p class="mut">Dva zdvižené prsty – znak svobody. Lidé je zvedali na demonstracích v listopadu 1989.</p><span class="cr">Foto: RobbieIanMorrison, CC BY 4.0 (Wikimedia Commons), 1989</span></div>
+      <div class="card phc"><img src="img/symboly/symbol-klice.jpg" alt="Ruce zvedají svazky klíčů" style="object-position:50% 50%"><h3>Zvonění klíči</h3><p class="mut"><b>„Odzvonění“ režimu:</b> zvuk klíčů jako „poslední zvonění“ komunistické vládě. <b>Odemykání budoucnosti:</b> „odemčení“ svobody, demokracie a hranic do svobodného světa.</p><span class="cr">Foto: dodáno školou; připomínka cinkání klíči (nedobový snímek)</span></div>
+      <div class="card phc"><img src="img/symboly/symbol-svicky.jpg" alt="Svíčky u pamětní desky 17. 11. 1989 na Národní třídě" style="object-position:50% 70%"><h3>Svíčky a květiny</h3><p class="mut">U pamětní desky na Národní třídě lidé zapalují svíčky a pokládají květiny.</p><span class="cr">Svíčky u pamětní desky na Národní třídě, snímek z roku 2012. Foto: Aktron, CC BY 3.0 / BY-SA 3.0 (Wikimedia Commons)</span></div>
+    </div>
+    <div class="tn">Popis fotografií na Wikimedia Commons (autor R. I. Morrison, 24.–28. 11. 1989): účastníci zvedali dva prsty a cinkali klíči jako symbol svobody. Výklad „odzvonění“ a „odemykání“ dodal zadavatel (metodicky rozveden v metodice). Zvonění klíči jako symbol konce režimu: e15.cz, Novinky.cz, expats.cz. NEPOTVRZENO a vynecháno: hláška „čas jít domů“ ke klíčům. Svíčky: Commons popisuje akci 17. 11. 2012 jako demonstraci odborů na Národní třídě (u pamětní desky jsou svíčky a květiny), ne jako tichou pietu; význam pro 1939 i 1989 z podkladu research/symboly17.txt – ověř (Paměť národa, ÚSTR).</div>
+  </div>
+</section>
+
+<!-- 15b -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow"><span class="tile orange sm"><svg class="sf"><use href="#i-note"/></svg></span>Symboly 1989 · 2/2</div>
+    <h2>Smajlík a píseň.</h2>
+    <div class="grid g2">
+      <div class="card"><div style="background:#fff;border-radius:18px;padding:10px 16px;display:inline-block;box-shadow:0 4px 14px #0003"><img src="img/of-logo.png" alt="Logo Občanského fóra" style="height:2.6em;display:block"></div><h3 style="margin-top:.7em;font-size:1.2em">Logo Občanského fóra</h3><p class="mut" style="margin-top:.4em;font-size:.85em">Veselý smajlík. Navrhl ho student Pavel Šťastný.</p><span class="cr">Logo OF: P. Šťastný, volné dílo (Wikimedia Commons)</span></div>
+      <div class="card"><div class="tile red xl"><svg class="sf"><use href="#i-note"/></svg></div><h3 style="margin-top:.7em;font-size:1.2em">Modlitba pro Martu</h3><p class="mut" style="margin-top:.4em;font-size:.85em">Zpívá Marta Kubišová. Z balkonu na Václavském náměstí zazněla 21. 11. 1989.</p></div>
+    </div>
+    <div class="tn">Autor loga: Pavel Šťastný (ČT24, e15.cz). Píseň a odkaz viz slide Písně. Symboly žáci potkají v bojovce.</div>
+  </div>
+</section>
+
+<!-- 15 -->
+<section class="slide compact">
+  <div class="wrap">
+    <div class="eyebrow"><span class="tile blue sm"><svg class="sf"><use href="#i-flag"/></svg></span>Časová osa</div>
+    <h2>Klikni na událost.</h2>
+    <div class="axw"><div class="ax" id="ax1"></div></div>
+    <div class="axw"><div class="ax" id="ax2"></div></div>
+    <div class="card" id="tld">Šedé = 1939–1970, barevné = 1989. Značka // = vynechané období (osa tam není v měřítku).</div>
+  </div>
+</section>
+
+<!-- 16 -->
+<section class="slide compact">
+  <div class="wrap cmp">
+    <h2>1939 vs. 1989</h2>
+    <div class="grid g2">
+      <div class="card a"><h3><span class="tile gray sm"><svg class="sf"><use href="#i-door"/></svg></span>1939</h3><ul class="list">
+        <li><b>Moc</b>nacistická okupace</li>
+        <li><b>Spouštěč</b>pohřeb J. Opletala, smrtelně postřeleného 28. 10.</li>
+        <li><b>Místo</b>Praha, Brno, Příbram</li>
+        <li><b>Reakce</b>tisíce zatčených, 9 popravených, Sachsenhausen</li>
+        <li><b>Důsledek</b>VŠ zavřeny (fakticky do 1945)</li>
+        <li><b>Dnes</b>Mezinárodní den studentstva</li></ul></div>
+      <div class="card b"><h3><span class="tile blue sm"><svg class="sf"><use href="#i-mega"/></svg></span>1989</h3><ul class="list">
+        <li><b>Moc</b>vláda jedné strany (KSČ)</li>
+        <li><b>Spouštěč</b>studentský pochod k výročí 1939</li>
+        <li><b>Místo</b>Albertov → Vyšehrad → Národní</li>
+        <li><b>Reakce</b>zásah, přes 500 zraněných</li>
+        <li><b>Důsledek</b>stávky, OF, za týden rezignace vedení KSČ</li>
+        <li><b>Dnes</b>Den boje za svobodu a demokracii</li></ul></div>
+    </div>
+    <p class="lead one"><b style="color:var(--fg)">Společné:</b> mladí lidé, odvaha, touha po svobodě – ale i riziko a cena, kterou někdo zaplatil.</p>
+    <p class="src">Čísla jsou přibližná, zdroje se liší. Zdroje viz předchozí slidy.</p>
+  </div>
+</section>
+
+<!-- 17 -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow"><span class="tile green sm"><svg class="sf"><use href="#i-key"/></svg></span>Operace 17. listopad</div>
+    <h2>Teď to zažijeme venku.</h2>
+    <p class="lead">20 schránek, jeden tým, jedno poselství. Provedou vás čtyři hodnoty a symboly, které už znáte.</p>
+    <div class="grid g4 keep">
+      <div class="card" style="text-align:center"><img class="vicon" src="img/hodnoty/Svoboda.png" alt="Ikona: Svoboda"><h3 style="margin-top:.7em">Svoboda</h3></div>
+      <div class="card" style="text-align:center"><img class="vicon" src="img/hodnoty/Odvaha.png" alt="Ikona: Odvaha"><h3 style="margin-top:.7em">Odvaha</h3></div>
+      <div class="card" style="text-align:center"><img class="vicon" src="img/hodnoty/Odpovednost.png" alt="Ikona: Odpovědnost"><h3 style="margin-top:.7em">Odpovědnost</h3></div>
+      <div class="card" style="text-align:center"><img class="vicon" src="img/hodnoty/Tolerance.png" alt="Ikona: Tolerance"><h3 style="margin-top:.7em">Tolerance</h3></div>
+    </div>
+    <p class="src">Připravila ZŠ Vančurova Hodonín</p>
+  </div>
+</section>
+
+</main>
+
+<div class="mark" title="ZŠ Vančurova Hodonín"><span class="lg"><img src="img/logo-zs-vancurova.png" alt="Logo ZŠ Vančurova Hodonín"></span><span class="t">Připravila<b>ZŠ Vančurova Hodonín</b></span></div>
+<div class="prog" id="prog"></div>
+<nav class="bar" id="bar">
+  <button id="prev" aria-label="Předchozí"><svg class="sf"><use href="#i-left"/></svg></button>
+  <span class="cnt" id="cnt"></span>
+  <button id="next" aria-label="Další"><svg class="sf"><use href="#i-right"/></svg></button>
+  <span class="rb" aria-hidden="true"></span>
+  <div class="seg" role="group" aria-label="Režim"><button id="tl-l">Světlý</button><button id="tl-d">Tmavý</button></div>
+  <button id="nt" aria-label="Poznámky učitele"><svg class="sf"><use href="#i-note2"/></svg></button>
+  <button id="fs" aria-label="Celá obrazovka"><svg class="sf"><use href="#i-full"/></svg></button>
+</nav>
+
+<script>
+var QZ={
+ q1:{q:"Čím se pohřeb Jana Opletala 15. 11. 1939 stal?",o:["Protiněmeckou demonstrací","Oficiálním státním smutkem protektorátu","Přehlídkou německé armády","Soukromou rodinnou událostí bez účasti veřejnosti"],a:0,e:"Pohřeb se změnil v protest proti okupaci. Následoval zásah v noci na 17. 11. (zdroj: cs.wikipedia.org, cenyjanaopletala.cz)."},
+ q2:{q:"Co se v roce 1970 stalo s Martou Kubišovou?",o:["Emigrovala do Austrálie","Dostala zákaz vystupování","Stala se poslankyní","Získala státní cenu za Modlitbu pro Martu"],a:1,e:"V roce 1970 dostala zákaz vystupování a píseň zmizela z rozhlasu. (Do Austrálie emigroval autor textu Petr Rada.) Zdroje: cs.wikipedia.org, Deník."},
+};
+function buzz(p){try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}}
+function qinit(el){
+ var d=QZ[el.dataset.id];
+ el.innerHTML="<div class='q'>"+d.q+"</div>";
+ var ord=d.o.map(function(t,k){return k});for(var k=ord.length-1;k>0;k--){var j=Math.floor(Math.random()*(k+1)),t=ord[k];ord[k]=ord[j];ord[j]=t}
+ var ci=ord.indexOf(d.a);
+ ord.forEach(function(oi,i){
+  var b=document.createElement("button");b.className="opt";b.textContent=d.o[oi];
+  b.onclick=function(){
+   if(el.dataset.done)return;el.dataset.done=1;
+   el.querySelectorAll(".opt")[ci].classList.add("right");
+   if(i!==ci){b.classList.add("wrong");buzz([30,40,30])}else buzz(12);
+   ex.textContent=(i===ci?"Správně. ":"Ne tak docela. ")+d.e;
+  };
+  el.appendChild(b);
+ });
+ var ex=document.createElement("p");ex.className="exp";el.appendChild(ex);
+}
+document.querySelectorAll(".quiz").forEach(qinit);
+
+var AX=[
+ {id:"ax1",seg:[["1939-03-01","1939-03-31",0,12],["1939-10-25","1939-11-20",17,62],["1941-11-01","1941-11-30",84,16]],brk:[12,79],
+  ev:[
+  ["1939-03-15","15. 3. 1939","Okupace, vznik Protektorátu","Okupace zbytku Československa, vznik Protektorátu Čechy a Morava.","a",1,9],
+  ["1939-10-28","28. 10. 1939","Demonstrace, zastřelen V. Sedláček","Demonstrace ve výročí vzniku ČSR. Zastřelen Václav Sedláček, postřelen Jan Opletal.","a",0,24],
+  ["1939-11-11","11. 11. 1939","Zemřel Jan Opletal (24 let)","Jan Opletal (24 let) zemřel.","a",1,46],
+  ["1939-11-15","15. 11. 1939","Pohřeb se změnil v protest","Pohřeb Jana Opletala se změnil v protest proti okupaci.","a",0,62],
+  ["1939-11-17","17. 11. 1939","Zavřeny VŠ, popravy, Sachsenhausen","Zavření českých vysokých škol, popravy 9 funkcionářů, odvlečení studentů do Sachsenhausenu.","a",1,72],
+  ["1941-11-17","1941","Londýn: Mezinárodní den studentstva","Londýn: vyhlášen Mezinárodní den studentstva (datum 16./17. 11. se liší).","a",0,90]]},
+ {id:"ax2",seg:[["1968-07-01","1970-03-01",0,40],["1989-11-15","1989-12-31",45,55]],brk:[40],
+  ev:[
+  ["1968-08-21","srpen 1968","Invaze, vzniká Modlitba pro Martu","Invaze vojsk Varšavské smlouvy. Vzniká Modlitba pro Martu.","a",1,9.5],
+  ["1969-01-16","16. 1. 1969","Jan Palach","Jan Palach se zapálil na Václavském náměstí, zemřel 19. 1.","a",0,14],
+  ["1969-07-01","1969","Kryl: Bratříčku, zavírej vrátka","Album Karla Kryla Bratříčku, zavírej vrátka. V září odjíždí do NSR. (Na ose umístěno doprostřed roku.)","a",1,28],
+  ["1970-02-03","1970","Kubišová: zákaz vystupování","Marta Kubišová dostává zákaz vystupování.","a",0,36],
+  ["1989-11-17","17. 11. 1989","Albertov, zásah na Národní","Albertov, pochod, zásah na Národní třídě.","b",1,56],
+  ["1989-11-19","19. 11. 1989","Vzniká Občanské fórum","Vzniká Občanské fórum.","b",0,56],
+  ["1989-11-21","21. 11. 1989","Havel z balkonu, zpívá Kubišová","Havel mluví z balkonu, Kubišová zpívá Modlitbu pro Martu.","b",1,74],
+  ["1989-11-24","24. 11. 1989","Rezignace vedení KSČ","Rezignace vedení KSČ.","b",0,76],
+  ["1989-12-29","29. 12. 1989","Havel zvolen prezidentem","Václav Havel zvolen prezidentem.","b",1,91.5]]}
+];
+var tld=document.getElementById("tld");
+function tpos(seg,d){var t=Date.parse(d);for(var i=0;i<seg.length;i++){var a=Date.parse(seg[i][0]),b=Date.parse(seg[i][1]);if(t>=a&&t<=b)return seg[i][2]+(t-a)/(b-a)*seg[i][3]}return 0}
+AX.forEach(function(A){
+ var el=document.getElementById(A.id),lines="",btns=[];
+ A.seg.forEach(function(g){var l=document.createElement("div");l.className="ln";l.style.left=g[2]+"%";l.style.width=g[3]+"%";el.appendChild(l)});
+ (A.brk||[]).forEach(function(x){var b=document.createElement("div");b.className="brk";b.style.left=x+"%";b.textContent="//";el.appendChild(b)});
+ A.ev.forEach(function(e){
+  var x=tpos(A.seg,e[0]),up=e[5]===1,mid=88,ly=up?mid-22:mid+22;
+  lines+='<line x1="'+x+'%" y1="'+mid+'" x2="'+e[6]+'%" y2="'+ly+'"/>';
+  var pt=document.createElement("button");pt.className="pt "+e[4];pt.style.left=x+"%";pt.setAttribute("aria-label",e[1]);
+  var lb=document.createElement("button");lb.className="lb "+(up?"u":"d");lb.style.left=e[6]+"%";lb.innerHTML="<b>"+e[1]+"</b>"+e[2];
+  [pt,lb].forEach(function(b){b.setAttribute("aria-pressed","false");b.onclick=function(){
+   document.querySelectorAll(".ax button").forEach(function(o){o.setAttribute("aria-pressed","false")});
+   pt.setAttribute("aria-pressed","true");lb.setAttribute("aria-pressed","true");
+   tld.innerHTML="<b>"+e[1]+"</b><br>"+e[3];buzz(8)}});
+  btns.push(pt,lb);
+ });
+ el.insertAdjacentHTML("afterbegin",'<svg>'+lines+'</svg>');
+ btns.forEach(function(b){el.appendChild(b)});
+});
+
+var S=[].slice.call(document.querySelectorAll(".slide")),n=0;
+function go(i){
+ n=Math.max(0,Math.min(S.length-1,i));
+ S.forEach(function(s,k){s.classList.toggle("active",k===n);s.classList.toggle("past",k<n)});
+ document.getElementById("cnt").textContent=(n+1)+" / "+S.length;
+ document.getElementById("prog").style.width=((n+1)/S.length*100)+"%";
+ S[n].scrollTop=0;document.body.classList.toggle("first",n===0);
+ try{history.replaceState(null,"","#"+(n+1))}catch(e){}
+}
+function fs(){
+ if(document.fullscreenElement)document.exitFullscreen();
+ else document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();
+}
+function setDark(d){
+ document.body.classList.toggle("dark",d);
+ document.getElementById("tl-d").classList.toggle("on",d);
+ document.getElementById("tl-l").classList.toggle("on",!d);
+ try{localStorage.setItem("t17dark",d?"1":"0")}catch(e){}
+}
+function theme(){setDark(!document.body.classList.contains("dark"))}
+var saved=null;try{saved=localStorage.getItem("t17dark")}catch(e){}
+setDark(saved==="1"||(saved===null&&window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches));
+document.getElementById("prev").onclick=function(){go(n-1)};
+document.getElementById("next").onclick=function(){go(n+1)};
+document.getElementById("fs").onclick=fs;
+document.getElementById("tl-l").onclick=function(){setDark(false)};
+document.getElementById("tl-d").onclick=function(){setDark(true)};
+function notes(){document.body.classList.toggle("notes")}
+document.getElementById("nt").onclick=notes;
+document.addEventListener("keydown",function(e){
+ var k=e.key;
+ if(k==="ArrowRight"||k==="PageDown"||k===" "){e.preventDefault();go(n+1)}
+ else if(k==="ArrowLeft"||k==="PageUp"){go(n-1)}
+ else if(k==="Home")go(0);
+ else if(k==="End")go(S.length-1);
+ else if(k==="f"||k==="F")fs();
+ else if(k==="t"||k==="T")theme();
+ else if(k==="n"||k==="N")notes();
+});
+document.getElementById("deck").addEventListener("click",function(e){
+ if(!e.target.closest("button,a,.quiz,.tl,.card,.pill"))go(n+1);
+});
+var sx=null;
+document.addEventListener("touchstart",function(e){sx=e.touches[0].clientX},{passive:true});
+document.addEventListener("touchend",function(e){if(sx===null)return;var dx=e.changedTouches[0].clientX-sx;sx=null;if(Math.abs(dx)>70)go(n+(dx<0?1:-1))},{passive:true});
+var idleT;
+function wake(){document.body.classList.remove("idle");clearTimeout(idleT);if(innerWidth>700)idleT=setTimeout(function(){document.body.classList.add("idle")},3500)}
+["mousemove","keydown","touchstart","click"].forEach(function(ev){document.addEventListener(ev,wake,{passive:true})});wake();
+var tmv=null,tms=120,tmEl=document.getElementById("tm"),tmb=document.getElementById("tmb");
+function tmShow(){tmEl.textContent=Math.floor(tms/60)+":"+("0"+tms%60).slice(-2)}
+tmb.onclick=function(){
+ if(tmv){clearInterval(tmv);tmv=null;tms=120;tmShow();tmb.textContent="Start";return}
+ tmb.textContent="Reset";
+ tmv=setInterval(function(){tms--;tmShow();if(tms<=0){clearInterval(tmv);tmv=null;tmb.textContent="Znovu";tms=120;buzz([60,40,60])}},1000);
+};
+var h=parseInt(location.hash.slice(1),10);go(h>0?h-1:0);
+</script>
+</body>
+</html>
