@@ -47,6 +47,9 @@
   const radarM = () => CONFIG.RADAR_M; // dosah radaru je pevný (config.js)
   const dej = (id) => STANOVISTE.find((x) => x.id === id) || null;
   const nehotove = () => sts().filter((s) => !hotove(stav.stanoviste[s.id]));
+  // Koncový bod (20) je skrytý (radar, šipka, chytání), dokud není hotový bod 11; jinak leží hned vedle startu.
+  const KONEC_ID = 20, KONEC_PO_ID = 11;
+  const viditelne = () => nehotove().filter((s) => s.id !== KONEC_ID || hotove(stav.stanoviste[KONEC_PO_ID]));
   const aktualni = () => nehotove()[0] || null; // doporučené (další v trase)
   const aktivni = () => sts().find((s) => stav.stanoviste[s.id].stav === "unlocked") || null; // odemčené = otevřený úkol
   const pocetHotovych = () => sts().filter((s) => hotove(stav.stanoviste[s.id])).length;
@@ -107,7 +110,10 @@
     });
     if (!uvod) lsSet(POHLED_KEY, ["hra", "cesta", "sbirka", "tym"].includes(p) ? p : "home");
     $("navT").textContent = TITULY[p] || "";
-    if (jeHome) { $("btnZacit").textContent = stav.zacatek ? "Pokračovat ve hře" : "Začít"; $("btnZacit").hidden = false; }
+    if (jeHome) {
+      $("btnZacit").textContent = stav.zacatek ? "Pokračovat ve hře" : "Začít"; $("btnZacit").hidden = false;
+      $("btnZnovu").hidden = !(stav.zacatek || tym.nazev || tym.clenove.length);
+    }
     if (p === "hra") { spustGps(); spustKompas(false); renderHra(); } else setSheet(null);
     if (p === "cesta") renderCesta();
     if (p === "sbirka") renderSbirka();
@@ -215,7 +221,7 @@
   // až když je jiné stanoviště o víc než 15 m blíž než dosavadní cíl (bez poskakování mezi dvěma stejně vzdálenými).
   let cilId = null;
   function cilNavigace() {
-    const zbyva = nehotove();
+    const zbyva = viditelne();
     if (!zbyva.length) { cilId = null; return null; }
     if (!gps.pos) return zbyva.find((s) => s.id === cilId) || zbyva[0];
     let nej = null;
@@ -246,7 +252,7 @@
     h += '<g class="rd-kruhy"><circle r="' + rr(CONFIG.PRAH_M).toFixed(1) + '" class="rd-dosah"/><circle r="' + rr(50).toFixed(1) + '"/><circle r="' + R + '"/></g>';
     h += '<g transform="rotate(' + rot.toFixed(1) + ')"><text y="-' + (R - 6) + '" class="rd-sever" text-anchor="middle">S</text>';
     if (gps.pos) {
-      nehotove().forEach((s) => {
+      viditelne().forEach((s) => {
         const d = vzdalenost(gps.pos, s);
         if (d > radarM()) return;
         const th = Math.atan2((s.lng - gps.pos.lng) * Math.cos(gps.pos.lat * Math.PI / 180), s.lat - gps.pos.lat);
@@ -278,11 +284,11 @@
       const acc = gps.pos.acc, d = vzdalenost(gps.pos, cil);
       $("nVzd").textContent = fmtVzd(d);
       $("nPresnost").textContent = "GPS přesnost: ±" + Math.round(acc) + " m" + (acc > CONFIG.PRAH_M ? ". Vyjdi na otevřené místo, ať se signál zpřesní." : "");
-      nehotove().forEach((s) => {
+      viditelne().forEach((s) => {
         const dd = vzdalenost(gps.pos, s);
         if (vDosahu(dd, acc) && (!nej || dd < nej.d)) nej = { s, d: dd };
       });
-      const n = nehotove().filter((s) => vzdalenost(gps.pos, s) <= radarM()).length;
+      const n = viditelne().filter((s) => vzdalenost(gps.pos, s) <= radarM()).length;
       $("rdPozn").textContent = n ? "V okolí " + radarM() + " m: " + n + (n === 1 ? " střípek" : n < 5 ? " střípky" : " střípků") : "V okolí " + radarM() + " m nic není";
     } else { $("rdPozn").textContent = "Radar čeká na polohu"; $("nPresnost").textContent = ""; }
     const b = $("btnChytit"), nove = nej && b.dataset.id !== String(nej.s.id);
@@ -534,6 +540,17 @@
     ukaz("hra");
   }
   $("btnZacit").addEventListener("click", () => { if (stav.zacatek) zacni(); else { potvrzeno = false; ukaz("tym", true); } });
+  // Spustit znovu: smaže stav hry i tým; potvrzení jen napsáním SMAZAT.
+  const dlgZnovu = $("dlgZnovu"), iSmazat = $("iSmazat"), btnSmazat = $("btnSmazat");
+  $("btnZnovu").addEventListener("click", () => { iSmazat.value = ""; btnSmazat.disabled = true; dlgZnovu.showModal(); iSmazat.focus(); });
+  iSmazat.addEventListener("input", () => { btnSmazat.disabled = iSmazat.value.trim().toUpperCase() !== "SMAZAT"; });
+  $("btnSmazatZpet").addEventListener("click", () => dlgZnovu.close());
+  $("fSmazat").addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (iSmazat.value.trim().toUpperCase() !== "SMAZAT") return;
+    try { localStorage.removeItem(kStav()); localStorage.removeItem(kStav() + ".poskozeno"); localStorage.removeItem(kTym()); localStorage.setItem(POHLED_KEY, "home"); } catch (err) { /* nic */ }
+    location.reload(); // čistý start: v paměti nezůstane nic ze staré hry
+  });
   $("btnKompletni").addEventListener("click", () => { if (tym.nazev && tym.clenove.length) { potvrzeno = true; obnovKrok(); window.scrollTo(0, 0); } });
   $("btnUpravit").addEventListener("click", () => { potvrzeno = false; obnovKrok(); });
   $("btnSpustit").addEventListener("click", () => { if (potvrzeno) zacni(); });

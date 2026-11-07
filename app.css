@@ -330,3 +330,13 @@ figure.symbol-foto { margin: -24px -24px 0; }
 .clen-radek { justify-content: space-between; }
 .clen-radek .btn { width: auto; min-height: 44px; padding: 8px 18px; font-size: 15px; }
 #tymClenove + .form-skup { margin-top: 16px; }
+
+/* Potvrzení „Spustit znovu“ */
+.dlg-znovu { border: 0; border-radius: 24px; padding: 24px; width: min(92vw, 420px); background: #fff; color: #1c1c1e; }
+.dlg-znovu::backdrop { background: rgba(0,0,0,.55); }
+.dlg-znovu h2 { margin: 0 0 8px; font-size: 22px; }
+.dlg-znovu p { margin: 0 0 16px; }
+.dlg-znovu input { display: block; width: 100%; box-sizing: border-box; min-height: 48px; margin: 6px 0 16px; padding: 0 14px; font: inherit; font-size: 18px; border: 2px solid #c7c7cc; border-radius: 14px; }
+.dlg-znovu .btn { margin-top: 8px; }
+.home .dlg-znovu .btn.nebezpecne { background: #D70015; color: #fff; }
+.home .dlg-znovu .btn.sek { background: #e5e5ea; color: #0A2A6B; }

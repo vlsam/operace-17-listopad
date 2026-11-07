@@ -10,7 +10,7 @@ const CONFIG = {
   // Čas návratu ve tvaru "HH:MM" (dnes). DOPLNIT. Když je prázdný nebo neplatný, odpočet běží
   // od stisku „Začít“ po dobu DELKA_MIN minut.
   CAS_NAVRATU: "DOPLNIT",
-  DELKA_MIN: 220, // 3 h 40 min terénní expedice podle podkladu
+  DELKA_MIN: 100, // 100 minut (1 h 40 min)
 
   // Závěrečný číselný kód zámku truhly. V podkladu CHYBÍ, doplnit při přípravě hry a ověřit.
   KONECNY_KOD: "KOD_DOPLNIT",

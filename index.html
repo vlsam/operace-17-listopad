@@ -68,9 +68,20 @@
       <h1 class="home-titul">17. listopad</h1>
       <p class="home-pod">Terénní šifrovací hra pro celou třídu. Najděte dvacet schránek a složte poselství.</p>
       <button id="btnZacit" class="btn velke-btn" type="button">Začít</button>
+      <button id="btnZnovu" class="btn sklo" type="button" hidden>Spustit znovu</button>
       <button id="installBtn" class="btn sklo" type="button" hidden><svg class="ic"><use href="#i-sdilet"/></svg> Přidat na plochu</button>
       <p id="iosHint" class="ios-navod" hidden><svg class="ic"><use href="#i-sdilet"/></svg><span>Na iPhonu klepněte dole na <strong>Sdílet</strong> a pak na <strong>Přidat na plochu</strong>.</span></p>
     </div>
+    <dialog id="dlgZnovu" class="dlg-znovu" aria-labelledby="znovuNadpis">
+      <form id="fSmazat" autocomplete="off">
+        <h2 id="znovuNadpis">Spustit hru znovu?</h2>
+        <p>Všechna data budou smazána a hra začne od nuly, včetně postupu, názvu týmu a členů týmu. Nelze to vrátit.</p>
+        <label for="iSmazat">Pro potvrzení napiš <b>SMAZAT</b></label>
+        <input id="iSmazat" type="text" autocapitalize="characters" autocorrect="off" spellcheck="false">
+        <button id="btnSmazat" class="btn nebezpecne" type="submit" disabled>Smazat vše a začít znovu</button>
+        <button id="btnSmazatZpet" class="btn sek" type="button">Zpět</button>
+      </form>
+    </dialog>
     <div class="home-pata">
       <div class="skola"><button type="button" id="logoHome" class="logo-btn" aria-label="Zpět na úvod"><img src="img/logo-zs-vancurova.png" alt="Logo ZŠ Vančurova Hodonín" width="52" height="52"></button><span>Připravila ZŠ Vančurova Hodonín</span></div>
       <small class="verze-kopie"></small>
