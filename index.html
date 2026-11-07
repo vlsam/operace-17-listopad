@@ -68,11 +68,6 @@
       <h1 class="home-titul">17. listopad</h1>
       <p class="home-pod">Terénní šifrovací hra pro celou třídu. Najděte dvacet schránek a složte poselství.</p>
       <button id="btnZacit" class="btn velke-btn" type="button">Začít</button>
-      <form id="fTymStart" class="tym-start" hidden>
-        <label for="iTymStart">Název týmu</label>
-        <input id="iTymStart" type="text" autocomplete="off" maxlength="40" required>
-        <button class="btn velke-btn" type="submit">Začít hru</button>
-      </form>
       <button id="installBtn" class="btn sklo" type="button" hidden><svg class="ic"><use href="#i-sdilet"/></svg> Přidat na plochu</button>
       <p id="iosHint" class="ios-navod" hidden><svg class="ic"><use href="#i-sdilet"/></svg><span>Na iPhonu klepněte dole na <strong>Sdílet</strong> a pak na <strong>Přidat na plochu</strong>.</span></p>
     </div>
@@ -199,6 +194,7 @@
       <!-- TÝM -->
       <section id="v-tym" class="pohled" hidden>
         <h1 class="large">Tým</h1>
+        <p class="popis uvod-pop" id="tymPopis" hidden>Zadej název týmu a členy, pak potvrď.</p>
         <h2 class="sekce">Název týmu</h2>
         <div class="skup form-skup">
           <label for="iTymNazev">Název týmu</label>
@@ -211,16 +207,22 @@
           <input id="iClen" type="text" autocomplete="off" maxlength="40">
           <button class="btn" type="submit">Přidat člena</button>
         </form>
-        <h2 class="sekce">Vzhled</h2>
-        <div class="skup form-skup">
+        <div id="tymStartAkce" class="tym-start" hidden>
+          <button id="btnKompletni" class="btn velke-btn" type="button" disabled>Tým je kompletní</button>
+          <button id="btnSpustit" class="btn velke-btn" type="button" hidden>Začít hru</button>
+          <button id="btnUpravit" class="btn sek" type="button" hidden>Upravit tým</button>
+          <button id="btnTymZpet" class="btn sek" type="button">Zpět</button>
+        </div>
+        <h2 class="sekce jen-app">Vzhled</h2>
+        <div class="skup form-skup jen-app">
           <div class="segment" role="radiogroup" aria-label="Vzhled aplikace">
             <button type="button" role="radio" data-tema="auto">Podle systému</button>
             <button type="button" role="radio" data-tema="light">Světlý</button>
             <button type="button" role="radio" data-tema="dark">Tmavý</button>
           </div>
         </div>
-        <h2 class="sekce">Aplikace</h2>
-        <div class="skup">
+        <h2 class="sekce jen-app">Aplikace</h2>
+        <div class="skup jen-app">
           <button id="btnDomu" class="rad rad-odkaz" type="button"><span class="dlazdice c-gray"><svg class="ic"><use href="#i-kompas"/></svg></span>
             <div class="rad-t"><b>Úvodní obrazovka</b></div><svg class="ic sip"><use href="#i-dal"/></svg></button>
           <div class="rad"><span class="dlazdice c-gray"><svg class="ic"><use href="#i-hodiny"/></svg></span>

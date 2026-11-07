@@ -94,9 +94,10 @@
 
   // ---------- pohledy ----------
   const TITULY = { hra: "Hra", cesta: "Cesta", sbirka: "Sbírka", tym: "Tým" };
-  let pohled = "home";
-  function ukaz(p) {
-    pohled = p;
+  let pohled = "home", potvrzeno = false; // potvrzeno: tým v kroku před startem je zamčený do souhrnu
+  function ukaz(p, uvod) { // uvod: krok „Tým“ před startem hry (bez záložek, s potvrzením „Tým je kompletní“ a „Začít hru“)
+    pohled = p; uvod = uvod === true;
+    $("app").classList.toggle("uvod-tym", uvod); $("tymStartAkce").hidden = !uvod;
     const jeHome = p === "home";
     $("v-home").hidden = !jeHome; $("app").hidden = jeHome;
     ["hra", "cesta", "sbirka", "tym"].forEach((n) => { $("v-" + n).hidden = n !== p; });
@@ -104,9 +105,9 @@
       const akt = b.dataset.tab === p;
       if (akt) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
     });
-    lsSet(POHLED_KEY, ["hra", "cesta", "sbirka", "tym"].includes(p) ? p : "home");
+    if (!uvod) lsSet(POHLED_KEY, ["hra", "cesta", "sbirka", "tym"].includes(p) ? p : "home");
     $("navT").textContent = TITULY[p] || "";
-    if (jeHome) { $("btnZacit").textContent = stav.zacatek ? "Pokračovat ve hře" : "Začít"; $("btnZacit").hidden = false; $("fTymStart").hidden = true; }
+    if (jeHome) { $("btnZacit").textContent = stav.zacatek ? "Pokračovat ve hře" : "Začít"; $("btnZacit").hidden = false; }
     if (p === "hra") { spustGps(); spustKompas(false); renderHra(); } else setSheet(null);
     if (p === "cesta") renderCesta();
     if (p === "sbirka") renderSbirka();
@@ -508,14 +509,20 @@
     }
   }
   function renderTym() {
-    $("iTymNazev").value = tym.nazev;
+    $("iTymNazev").value = tym.nazev; obnovKrok();
+  }
+  function obnovKrok() {
+    const uv = $("app").classList.contains("uvod-tym"), zam = uv && potvrzeno;
+    $("v-tym").classList.toggle("zamceno", zam); $("iTymNazev").readOnly = zam; $("tymPopis").hidden = !uv;
+    $("btnKompletni").hidden = zam; $("btnKompletni").disabled = !(tym.nazev && tym.clenove.length);
+    $("btnSpustit").hidden = !zam; $("btnUpravit").hidden = !zam; $("btnTymZpet").hidden = zam;
     const el = $("tymClenove"); el.textContent = "";
     if (!tym.clenove.length) { const r = document.createElement("div"); r.className = "rad"; r.innerHTML = '<div class="rad-t"><small>Zatím žádní členové.</small></div>'; el.appendChild(r); }
     tym.clenove.forEach((jmeno, i) => {
       const r = document.createElement("div"); r.className = "rad clen-radek";
       const t = document.createElement("div"); t.className = "rad-t"; const b = document.createElement("b"); b.textContent = jmeno; t.appendChild(b);
       const x = document.createElement("button"); x.type = "button"; x.className = "btn sek"; x.textContent = "Odebrat"; x.setAttribute("aria-label", "Odebrat " + jmeno);
-      x.addEventListener("click", () => { tym.clenove.splice(i, 1); ulozTym(); renderTym(); });
+      x.addEventListener("click", () => { tym.clenove.splice(i, 1); ulozTym(); obnovKrok(); });
       r.append(t, x); el.appendChild(r);
     });
   }
@@ -526,17 +533,12 @@
     spustGps(); spustKompas(true);
     ukaz("hra");
   }
-  $("btnZacit").addEventListener("click", () => { // při startu se zeptáme na název týmu (jen pokud ještě není)
-    if (tym.nazev) return zacni();
-    $("btnZacit").hidden = true; $("fTymStart").hidden = false; $("iTymStart").focus();
-  });
-  $("fTymStart").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const n = $("iTymStart").value.trim();
-    if (!n) return;
-    tym.nazev = n; ulozTym(); zacni();
-  });
-  $("iTymNazev").addEventListener("input", () => { tym.nazev = $("iTymNazev").value.trim(); ulozTym(); });
+  $("btnZacit").addEventListener("click", () => { if (stav.zacatek) zacni(); else { potvrzeno = false; ukaz("tym", true); } });
+  $("btnKompletni").addEventListener("click", () => { if (tym.nazev && tym.clenove.length) { potvrzeno = true; obnovKrok(); window.scrollTo(0, 0); } });
+  $("btnUpravit").addEventListener("click", () => { potvrzeno = false; obnovKrok(); });
+  $("btnSpustit").addEventListener("click", () => { if (potvrzeno) zacni(); });
+  $("btnTymZpet").addEventListener("click", () => ukaz("home"));
+  $("iTymNazev").addEventListener("input", () => { tym.nazev = $("iTymNazev").value.trim(); ulozTym(); obnovKrok(); });
   $("fClen").addEventListener("submit", (e) => {
     e.preventDefault();
     const j = $("iClen").value.trim();
