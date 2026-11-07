@@ -68,9 +68,13 @@
       <h1 class="home-titul">17. listopad</h1>
       <p class="home-pod">Terénní šifrovací hra pro celou třídu. Najděte dvacet schránek a složte poselství.</p>
       <button id="btnZacit" class="btn velke-btn" type="button">Začít</button>
+      <form id="fTymStart" class="tym-start" hidden>
+        <label for="iTymStart">Název týmu</label>
+        <input id="iTymStart" type="text" autocomplete="off" maxlength="40" required>
+        <button class="btn velke-btn" type="submit">Začít hru</button>
+      </form>
       <button id="installBtn" class="btn sklo" type="button" hidden><svg class="ic"><use href="#i-sdilet"/></svg> Přidat na plochu</button>
       <p id="iosHint" class="ios-navod" hidden><svg class="ic"><use href="#i-sdilet"/></svg><span>Na iPhonu klepněte dole na <strong>Sdílet</strong> a pak na <strong>Přidat na plochu</strong>.</span></p>
-      <button id="btnUcitel" class="odkaz" type="button">Jsem učitel</button>
     </div>
     <div class="home-pata">
       <div class="skola"><button type="button" id="logoHome" class="logo-btn" aria-label="Zpět na úvod"><img src="img/logo-zs-vancurova.png" alt="Logo ZŠ Vančurova Hodonín" width="52" height="52"></button><span>Připravila ZŠ Vančurova Hodonín</span></div>
@@ -91,13 +95,9 @@
     <main>
       <!-- HRA -->
       <section id="v-hra" class="pohled" hidden>
-        <div class="titul-radek"><img class="stuha stuha-mala" src="img/stuha.png" alt="" width="420" height="609" aria-hidden="true"><h1 id="hTitul" class="large">Hra</h1></div>
+        <div class="titul-radek"><img class="stuha stuha-mala" src="img/stuha.png" alt="" width="420" height="609" aria-hidden="true"><h1 id="hTitul" class="large">Hra</h1><div class="stav-prava"><span id="hCas"></span><span id="hStanoviste"></span></div></div>
         <div class="stav-radek">
           <div class="progres" role="img" aria-label="Postup"><div id="hProg" class="progres-v"></div></div>
-          <div class="stav-pilulky">
-            <span class="pilulka" id="hStanoviste"></span>
-            <span class="pilulka" id="hCas"></span>
-          </div>
         </div>
         <div id="pNav" class="blok" hidden>
           <div class="radar-karta">
@@ -124,28 +124,14 @@
             </div>
           </div>
 
-          <h2 class="sekce"><span id="nNadpis">Nejbližší střípek</span></h2>
-          <p id="nZbyva" class="popis pozn"></p>
           <div class="skup">
             <div class="rad"><span class="dlazdice c-red"><svg class="ic"><use href="#i-pin"/></svg></span>
               <div class="rad-t"><b>Souřadnice</b><small id="nSour"></small></div></div>
-            <a id="nMapy" class="rad rad-odkaz" href="#" target="_blank" rel="noopener"><span class="dlazdice c-blue"><svg class="ic"><use href="#i-cesta"/></svg></span>
-              <div class="rad-t"><b>Otevřít v Mapách</b></div><svg class="ic sip"><use href="#i-dal"/></svg></a>
-            <a id="nGeo" class="rad rad-odkaz" href="#"><span class="dlazdice c-green"><svg class="ic"><use href="#i-kompas"/></svg></span>
-              <div class="rad-t"><b>Otevřít v aplikaci map</b></div><svg class="ic sip"><use href="#i-dal"/></svg></a>
             <button id="btnKompas" class="rad rad-odkaz" type="button" hidden><span class="dlazdice c-orange"><svg class="ic"><use href="#i-kompas"/></svg></span>
               <div class="rad-t"><b>Zapnout kompas</b></div><svg class="ic sip"><use href="#i-dal"/></svg></button>
             <button id="btnGps" class="rad rad-odkaz" type="button" hidden><span class="dlazdice c-orange"><svg class="ic"><use href="#i-pin"/></svg></span>
               <div class="rad-t"><b>Zapnout polohu</b></div><svg class="ic sip"><use href="#i-dal"/></svg></button>
-            <button id="btnBezGps" class="rad rad-odkaz" type="button"><span class="dlazdice c-indigo"><svg class="ic"><use href="#i-klic"/></svg></span>
-              <div class="rad-t"><b>Nemám signál GPS</b><small>Odemknutí kódem od učitele</small></div><svg class="ic sip"><use href="#i-dal"/></svg></button>
           </div>
-          <form id="fKod" class="skup form-skup" hidden>
-            <label for="iKod">Kód od učitele</label>
-            <input id="iKod" type="text" autocomplete="off" autocapitalize="characters" inputmode="text">
-            <button class="btn" type="submit">Odemknout</button>
-          </form>
-          <p id="nKodChyba" class="chyba" role="alert" hidden>Kód nesedí.</p>
         </div>
 
         <h2 id="hVetaNadpis" class="sekce">Poselství</h2>
@@ -172,7 +158,6 @@
             <button class="btn" type="submit">Odemknout dopis</button>
           </form>
           <p id="fChyba" class="chyba" role="alert" hidden>Kód nesedí.</p>
-          <button id="btnObejit" class="odkaz" type="button" hidden>Učitel: zobrazit dopis bez kódu</button>
         </div>
 
         <div id="pDopis" class="blok" hidden>
@@ -214,16 +199,18 @@
       <!-- TÝM -->
       <section id="v-tym" class="pohled" hidden>
         <h1 class="large">Tým</h1>
-        <h2 class="sekce" id="hRoleNadpis">Role</h2>
-        <div id="hRoleTelo"></div>
-        <p class="popis pozn">Po každých čtyřech stanovištích se role vystřídají: každý si vezme jinou roli než dosud.</p>
-        <h2 class="sekce">Bezpečnost</h2>
-        <div class="skup">
-          <a id="hNouze" class="rad rad-odkaz" href="#"><span class="dlazdice c-red"><svg class="ic"><use href="#i-telefon"/></svg></span>
-            <div class="rad-t"><b>Nouzový kontakt</b><small id="hNouzeText"></small></div><svg class="ic sip"><use href="#i-dal"/></svg></a>
-          <a class="rad rad-odkaz" href="tel:112"><span class="dlazdice c-red"><svg class="ic"><use href="#i-varovani"/></svg></span>
-            <div class="rad-t"><b>Tísňové volání 112</b></div><svg class="ic sip"><use href="#i-dal"/></svg></a>
+        <h2 class="sekce">Název týmu</h2>
+        <div class="skup form-skup">
+          <label for="iTymNazev">Název týmu</label>
+          <input id="iTymNazev" type="text" autocomplete="off" maxlength="40">
         </div>
+        <h2 class="sekce">Členové týmu</h2>
+        <div id="tymClenove" class="skup"></div>
+        <form id="fClen" class="skup form-skup">
+          <label for="iClen">Jméno člena</label>
+          <input id="iClen" type="text" autocomplete="off" maxlength="40">
+          <button class="btn" type="submit">Přidat člena</button>
+        </form>
         <h2 class="sekce">Vzhled</h2>
         <div class="skup form-skup">
           <div class="segment" role="radiogroup" aria-label="Vzhled aplikace">
@@ -243,61 +230,6 @@
         </div>
       </section>
 
-      <!-- PIN -->
-      <section id="v-pin" class="pohled" hidden>
-        <h1 class="large">Učitel</h1>
-        <form id="fPin" class="skup form-skup">
-          <label for="iPin">PIN</label>
-          <input id="iPin" type="password" inputmode="numeric" autocomplete="off">
-          <button class="btn" type="submit">Vstoupit</button>
-        </form>
-        <p id="pinChyba" class="chyba" role="alert" hidden>PIN nesedí.</p>
-        <p class="popis pozn">PIN je jen ochrana před omylem, ne zabezpečení: je uložen v souboru config.js.</p>
-      </section>
-
-      <!-- UČITEL -->
-      <section id="v-ucitel" class="pohled" hidden>
-        <h1 class="large">Učitel</h1>
-        <div class="skola skola-mala"><img src="img/logo-zs-vancurova.png" alt="Logo ZŠ Vančurova Hodonín" width="32" height="32"><span>ZŠ Vančurova Hodonín</span></div>
-        <div id="uVarovani" class="varovani" hidden></div>
-
-        <h2 class="sekce">Radar</h2>
-        <div class="skup">
-          <button id="btnDosah" class="rad rad-odkaz" type="button"><span class="dlazdice c-orange"><svg class="ic"><use href="#i-kompas"/></svg></span>
-            <div class="rad-t"><b>Dosah radaru</b><small id="dosahText"></small></div><svg class="ic sip"><use href="#i-dal"/></svg></button>
-        </div>
-
-        <h2 class="sekce">Čas</h2>
-        <div class="skup">
-          <div class="rad"><div class="rad-t"><b>Začátek</b></div><span class="rad-v" id="tZacatek"></span></div>
-          <div class="rad"><div class="rad-t"><b>Čas návratu</b></div><span class="rad-v" id="tNavrat"></span></div>
-          <div class="rad"><div class="rad-t"><b>Zbývá</b></div><span class="rad-v" id="tZbyva"></span></div>
-          <div class="rad"><div class="rad-t"><b>Nouzový kontakt</b></div><span class="rad-v" id="tKontakt"></span></div>
-          <div class="rad"><div class="rad-t"><b>Ruční kód bez GPS</b></div><span class="rad-v" id="tKod"></span></div>
-        </div>
-
-        <h2 class="sekce">Aktuální stanoviště</h2>
-        <div class="skup form-skup">
-          <p id="aInfo" class="odst"></p>
-          <button id="btnUOdemknout" class="btn" type="button">Odemknout</button>
-          <button id="btnUPreskocit" class="btn sek" type="button">Přeskočit (písmeno se odhalí)</button>
-        </div>
-
-        <h2 class="sekce">Přehled stanovišť</h2>
-        <p class="popis pozn">Souřadnice a místa schránek jsou NEOVĚŘENÉ v terénu (návrh z OpenStreetMap).</p>
-        <div id="uSeznam" class="skup"></div>
-
-        <h2 class="sekce">Sbírka symbolů</h2>
-        <div id="uSbirka" class="skup"></div>
-
-        <h2 class="sekce">Export a reset</h2>
-        <div class="skup form-skup">
-          <button id="btnExport" class="btn sek" type="button">Exportovat postup (soubor)</button>
-          <button id="btnExportSour" class="btn sek" type="button">Exportovat souřadnice (trasa.json)</button>
-          <button id="btnReset" class="btn nebezpecne" type="button">Resetovat hru</button>
-          <textarea id="uExport" readonly rows="6" hidden></textarea>
-        </div>
-      </section>
       <p class="verze-radek verze-kopie"></p>
     </main>
 
@@ -306,7 +238,6 @@
       <button type="button" data-tab="cesta"><svg class="ic"><use href="#i-cesta"/></svg><span>Cesta</span></button>
       <button type="button" data-tab="sbirka"><svg class="ic"><use href="#i-sbirka"/></svg><span>Sbírka</span></button>
       <button type="button" data-tab="tym"><svg class="ic"><use href="#i-tym"/></svg><span>Tým</span></button>
-      <button type="button" data-tab="ucitel"><svg class="ic"><use href="#i-zamek"/></svg><span>Učitel</span></button>
     </nav>
 
     <div id="scrim" class="scrim" hidden></div>
@@ -345,7 +276,6 @@
           <div class="rad"><span class="dlazdice velka-dl" id="rSymDl"></span>
             <div class="rad-t"><small>Nový symbol ve Sbírce</small><b id="rSymNazev"></b></div></div>
         </div>
-        <div id="rRole" hidden></div>
         <button id="btnPokracovat" class="btn" type="button">Pokračovat</button>
       </div>
     </div>

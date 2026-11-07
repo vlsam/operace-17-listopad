@@ -4,23 +4,13 @@ const CONFIG = {
   // Dosah (v metrech): střípek lze chytit, když vzdálenost minus započtená nepřesnost GPS (nejvýše PRAH_M) je do PRAH_M.
   // Nepřesná GPS (>PRAH_M) tedy cíl nezpřesní, nejhůř se chytí do 2×PRAH_M.
   PRAH_M: 15,
-  // Střípek se objeví na radaru, když je hráč do RADAR_M metrů (výchozí; učitel může změnit v aplikaci).
-  RADAR_M: 400, // body jsou od sebe stovky metrů až kilometry; učitel může dosah přepnout na 150 / 400 / 800 m
-
-  // PIN do učitelského režimu. ZMĚNIT. POZOR: PIN není bezpečnost, je to jen ochrana před omylem
-  // (žák, který otevře zdrojový kód aplikace, ho vidí). Ruční kód a odpovědi zde nechráníme.
-  PIN_UCITEL: "0000",
-
-  // Ruční kód, kterým učitel/ka odemkne stanoviště, když telefon nemá signál GPS. ZMĚNIT.
-  RUCNI_KOD: "1717",
+  // Střípek se objeví na radaru, když je hráč do RADAR_M metrů (pevně, bez přepínání).
+  RADAR_M: 300,
 
   // Čas návratu ve tvaru "HH:MM" (dnes). DOPLNIT. Když je prázdný nebo neplatný, odpočet běží
   // od stisku „Začít“ po dobu DELKA_MIN minut.
   CAS_NAVRATU: "DOPLNIT",
   DELKA_MIN: 220, // 3 h 40 min terénní expedice podle podkladu
-
-  // Nouzový kontakt (zobrazí se hráčům i učiteli). DOPLNIT.
-  NOUZOVY_KONTAKT: { jmeno: "DOPLNIT", telefon: "" },
 
   // Závěrečný číselný kód zámku truhly. V podkladu CHYBÍ, doplnit při přípravě hry a ověřit.
   KONECNY_KOD: "KOD_DOPLNIT",
@@ -33,17 +23,10 @@ const CONFIG = {
     "OTÁZKA 4 – DOPLNIT",
   ],
 
-  // Role (jeden tým, 20 žáků). Po každých ROTACE_PO stanovištích se role vystřídají.
+  // Stanoviště se v Cestě řadí do skupin po ROTACE_PO; karta symbolu se odemkne po každém ROTACE_PO-tém střípku.
   ROTACE_PO: 4,
-  ROLE: [
-    { nazev: "Navigátoři", ikona: "kompas", pocet: 3, popis: "vedou skupinu podle mapy a šipky v aplikaci" },
-    { nazev: "Pátrači", ikona: "lupa", pocet: 4, popis: "hledají schránku na místě" },
-    { nazev: "Luštitelé", ikona: "klic", pocet: 5, popis: "řeší úkol ze schránky" },
-    { nazev: "Archiváři", ikona: "kniha", pocet: 4, popis: "zapisují písmena a odpovědi na hlavní list" },
-    { nazev: "Kontrolní tým", ikona: "stit", pocet: 4, popis: "hlídají čas, bezpečnost a počet lidí ve skupině" },
-  ],
 
-  // Sbírka symbolů 17. listopadu: karta se odemkne, až hráči chytí „od“ střípků (po každém čtvrtém, shoduje se s rotací rolí).
+  // Sbírka symbolů 17. listopadu: karta se odemkne, až hráči chytí „od“ střípků (po každém čtvrtém).
   // Texty (bez „plny“) NESMÍ obsahovat žádnou správnou odpověď (hráči mohou chytat střípky v libovolném pořadí); kontroluje to
   // bojovka-zdroj/tools/kontrola-prozrazeni.py. Varianta „plny“ se ukáže až po splnění všech stanovišť. Texty a zdroje jsou ověřené, drž je fakticky opatrné. Ikony jsou vlastní (sada v index.html).
   SYMBOLY: [

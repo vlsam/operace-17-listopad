@@ -11,7 +11,7 @@
   const lsGet = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
   const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) { /* plné úložiště */ } };
 
-  const kStav = () => "bojovka.stav", kPrepis = () => "bojovka.prepis";
+  const kStav = () => "bojovka.stav", kTym = () => "bojovka.tym";
 
   // ---------- stav hry (localStorage, přežije aktualizaci aplikace) ----------
   function novyStav() {
@@ -33,18 +33,19 @@
       return novyStav();
     }
   }
-  function nactiPrepis() { try { return JSON.parse(lsGet(kPrepis()) || "{}") || {}; } catch (e) { return {}; } }
+  function nactiTym() { // { nazev, clenove: [jméno, ...] }
+    try { const t = JSON.parse(lsGet(kTym()) || "{}") || {}; return { nazev: String(t.nazev || ""), clenove: Array.isArray(t.clenove) ? t.clenove.map(String) : [] }; } catch (e) { return { nazev: "", clenove: [] }; }
+  }
   let stav = nacti();
-  let prepis = nactiPrepis(); // { id: { lat, lng, acc, cas } } souřadnice nastavené učitelem v terénu
+  let tym = nactiTym();
   const uloz = () => lsSet(kStav(), JSON.stringify(stav));
-  const ulozPrepis = () => lsSet(kPrepis(), JSON.stringify(prepis));
+  const ulozTym = () => lsSet(kTym(), JSON.stringify(tym));
 
   const hotove = (s) => s.stav === "solved" || s.stav === "skipped";
-  const ef = (s) => (prepis[s.id] ? Object.assign({}, s, { lat: prepis[s.id].lat, lng: prepis[s.id].lng, prepsano: true }) : s);
-  const sts = () => STANOVISTE.map(ef);
+  const sts = () => STANOVISTE;
   const pocet = () => VSECH;
-  const radarM = () => +lsGet("bojovka.radar") || CONFIG.RADAR_M; // dosah radaru: výchozí z config.js, učitel přepíná 150 / 400 / 800 m
-  const dej = (id) => { const s = STANOVISTE.find((x) => x.id === id); return s ? ef(s) : null; };
+  const radarM = () => CONFIG.RADAR_M; // dosah radaru je pevný (config.js)
+  const dej = (id) => STANOVISTE.find((x) => x.id === id) || null;
   const nehotove = () => sts().filter((s) => !hotove(stav.stanoviste[s.id]));
   const aktualni = () => nehotove()[0] || null; // doporučené (další v trase)
   const aktivni = () => sts().find((s) => stav.stanoviste[s.id].stav === "unlocked") || null; // odemčené = otevřený úkol
@@ -56,8 +57,7 @@
     const s = Math.max(0, Math.floor(ms / 1000));
     return Math.floor(s / 3600) + ":" + pad(Math.floor(s / 60) % 60) + ":" + pad(s % 60);
   }
-  const hm = (d) => pad(d.getHours()) + ":" + pad(d.getMinutes());
-  const fmtSour = (s) => s.lat.toFixed(6) + ", " + s.lng.toFixed(6);
+  const fmtSour = (s) => s.lat.toFixed(7) + " N, " + s.lng.toFixed(7) + " E";
   function norm(t) { // stejná normalizace jako tools/build-data.py
     return String(t).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
   }
@@ -93,27 +93,24 @@
   document.querySelectorAll(".verze-kopie").forEach((e) => { e.textContent = $("verze").textContent; });
 
   // ---------- pohledy ----------
-  const TITULY = { hra: "Hra", cesta: "Cesta", sbirka: "Sbírka", tym: "Tým", ucitel: "Učitel", pin: "Učitel" };
+  const TITULY = { hra: "Hra", cesta: "Cesta", sbirka: "Sbírka", tym: "Tým" };
   let pohled = "home";
   function ukaz(p) {
-    if (p === "ucitel" && sessionStorage.getItem("bojovka.ucitel") !== "1") p = "pin";
     pohled = p;
     const jeHome = p === "home";
     $("v-home").hidden = !jeHome; $("app").hidden = jeHome;
-    ["hra", "cesta", "sbirka", "tym", "pin", "ucitel"].forEach((n) => { $("v-" + n).hidden = n !== p; });
+    ["hra", "cesta", "sbirka", "tym"].forEach((n) => { $("v-" + n).hidden = n !== p; });
     document.querySelectorAll(".tabbar button").forEach((b) => {
-      const akt = b.dataset.tab === p || (p === "pin" && b.dataset.tab === "ucitel");
+      const akt = b.dataset.tab === p;
       if (akt) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
     });
     lsSet(POHLED_KEY, ["hra", "cesta", "sbirka", "tym"].includes(p) ? p : "home");
     $("navT").textContent = TITULY[p] || "";
-    if (jeHome) $("btnZacit").textContent = stav.zacatek ? "Pokračovat ve hře" : "Začít";
+    if (jeHome) { $("btnZacit").textContent = stav.zacatek ? "Pokračovat ve hře" : "Začít"; $("btnZacit").hidden = false; $("fTymStart").hidden = true; }
     if (p === "hra") { spustGps(); spustKompas(false); renderHra(); } else setSheet(null);
     if (p === "cesta") renderCesta();
     if (p === "sbirka") renderSbirka();
     if (p === "tym") renderTym();
-    if (p === "ucitel") renderUcitel();
-    if (p === "pin") { $("iPin").value = ""; $("pinChyba").hidden = true; }
     window.scrollTo(0, 0); naScroll();
   }
   function naScroll() {
@@ -156,17 +153,17 @@
   })();
 
   // ---------- poloha a kompas ----------
-  const gps = { pos: null, chyba: null, watch: null, heading: null, kompasBezi: false, denied: false };
+  const gps = { pos: null, chyba: null, watch: null, heading: null, kompasBezi: false };
   function spustGps() {
     if (gps.watch !== null) return;
-    if (!navigator.geolocation) { gps.chyba = "Toto zařízení nemá polohové služby. Použijte „Nemám signál GPS“."; gps.denied = true; return; }
+    if (!navigator.geolocation) { gps.chyba = "Toto zařízení nemá polohové služby."; return; }
     gps.watch = navigator.geolocation.watchPosition(
-      (p) => { gps.pos = { lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy, t: Date.now() }; gps.chyba = null; gps.denied = false; aktualizujHru(); },
+      (p) => { gps.pos = { lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy, t: Date.now() }; gps.chyba = null; aktualizujHru(); },
       (e) => {
-        if (e.code === 1) { // odepřené oprávnění: nabídneme ruční kód
-          gps.chyba = "Poloha není povolena. Povolte ji v nastavení prohlížeče, nebo odemkněte kódem od učitele.";
-          gps.denied = true; gps.watch = null; // umožní zkusit znovu
-        } else gps.chyba = "Signál GPS není k dispozici. Vyjděte na otevřené místo, nebo použijte „Nemám signál GPS“.";
+        if (e.code === 1) { // odepřené oprávnění
+          gps.chyba = "Poloha není povolena. Povolte ji v nastavení prohlížeče.";
+          gps.watch = null; // umožní zkusit znovu
+        } else gps.chyba = "Signál GPS není k dispozici. Vyjděte na otevřené místo.";
         aktualizujHru();
       },
       { enableHighAccuracy: true, maximumAge: 2000, timeout: 30000 });
@@ -227,15 +224,7 @@
     cilId = nej.s.id;
     return nej.s;
   }
-  const popisCile = (s) => "Stanoviště " + s.id; // názvy míst vidí jen učitel (hráčům by mohly prozradit odpověď)
-  function nastavCil(s) {
-    const lab = encodeURIComponent("Stanoviště " + s.id);
-    $("nNadpis").textContent = "Nejbližší střípek: " + popisCile(s);
-    $("nZbyva").textContent = "Nejbližší z " + nehotove().length + " zbývajících.";
-    $("nSour").textContent = fmtSour(s);
-    $("nMapy").href = "https://www.google.com/maps/dir/?api=1&destination=" + s.lat + "," + s.lng + "&travelmode=walking";
-    $("nGeo").href = "geo:" + s.lat + "," + s.lng + "?q=" + s.lat + "," + s.lng + "(" + lab + ")";
-  }
+  function nastavCil(s) { $("nSour").textContent = fmtSour(s); } // název ani číslo cíle se hráči neukazuje
   function aktualizujSipku() {
     const cil = cilNavigace();
     if (pohled !== "hra" || !cil || !gps.pos) return;
@@ -264,12 +253,12 @@
         const v = vDosahu(d, gps.pos.acc);
         h += '<g transform="translate(' + x.toFixed(1) + " " + y.toFixed(1) + ')" class="stripek' + (d < 50 ? " pulz" : "") + (v ? " dosah" : "") + (cil && cil.id === s.id ? " dop" : "") + '" data-id="' + s.id + '">' +
           '<circle r="15" fill="url(#rdZar)" class="s-zar"/><path d="' + STRIPEK + '" class="s-tvar"/>' +
-          '<text y="-17" text-anchor="middle" class="s-cislo" transform="rotate(' + (-rot).toFixed(1) + ')">' + s.id + "</text></g>";
+          "</g>";
       });
     }
     if (gps.pos && cil && vzdalenost(gps.pos, cil) > radarM()) { // nejbližší je za okrajem radaru: šipka na okraji
       const th = azimut(gps.pos, cil);
-      h += '<g transform="rotate(' + th.toFixed(1) + ') translate(0 -' + (R - 2) + ')" class="rd-okraj"><path d="M-8 8L0 -6 8 8Z"/><text y="22" text-anchor="middle" transform="rotate(' + (-th - rot).toFixed(1) + ' 0 22)">' + cil.id + "</text></g>";
+      h += '<g transform="rotate(' + th.toFixed(1) + ') translate(0 -' + (R - 2) + ')" class="rd-okraj"><path d="M-8 8L0 -6 8 8Z"/></g>';
     }
     h += "</g>";
     h += '<path d="M0 -14L-9 8 0 3 9 8Z" class="rd-ja"/><circle r="4.5" class="rd-bod"/>';
@@ -282,7 +271,6 @@
     if (!cil) return;
     $("nStav").textContent = gps.chyba || (gps.pos ? "" : "Zjišťuji polohu…");
     $("btnGps").hidden = gps.watch !== null;
-    if (gps.denied) $("fKod").hidden = false;
     nastavCil(cil);
     let nej = null;
     if (gps.pos) {
@@ -311,7 +299,6 @@
     s.stav = "unlocked"; s.odemceno = Date.now(); s.zpusob = zpusob;
     uloz(); vib([120, 60, 120]);
     if (pohled === "hra") renderHra();
-    if (pohled === "ucitel") renderUcitel();
   }
 
   // ---------- odpočet ----------
@@ -329,20 +316,8 @@
   function tik() {
     const n = casNavratu();
     $("hCas").textContent = n ? "Zbývá " + textZbyva() : "";
-    if (pohled === "ucitel") $("tZbyva").textContent = textZbyva();
   }
   setInterval(tik, 1000);
-
-  // ---------- role (rotují po každých ROTACE_PO chycených střípcích, pořadí chytání je volné) ----------
-  const ROLE_BARVA = { kompas: "c-blue", lupa: "c-orange", klic: "c-indigo", kniha: "c-green", stit: "c-red" };
-  function blokRoli(n) {
-    const od = Math.floor(n / CONFIG.ROTACE_PO) * CONFIG.ROTACE_PO + 1;
-    const doo = Math.min(pocet(), od + CONFIG.ROTACE_PO - 1);
-    return { nadpis: "Role pro střípky " + od + "–" + doo,
-      html: '<div class="skup">' + CONFIG.ROLE.map((r) =>
-        '<div class="rad"><span class="dlazdice ' + (ROLE_BARVA[r.ikona] || "c-gray") + '">' + SVG(r.ikona) + '</span>' +
-        '<div class="rad-t"><b>' + r.nazev + '</b><small>' + r.popis + '</small></div><span class="rad-v">' + r.pocet + "</span></div>").join("") + "</div>" };
-  }
 
   // ---------- obraz ze střípků (5×4, vlastní SVG #obraz v index.html) ----------
   function kresliObraz(el, pref, novy) {
@@ -462,7 +437,7 @@
     const cil = cilNavigace();
     nastavCil(cil);
     $("nVzd").textContent = "–"; $("nSmer").textContent = ""; $("nPresnost").textContent = "";
-    $("fKod").hidden = true; $("nKodChyba").hidden = true; $("btnChytit").hidden = true; delete $("btnChytit").dataset.id;
+    $("btnChytit").hidden = true; delete $("btnChytit").dataset.id;
     aktualizujHru(); kresliRadar();
   }
   function renderUkol(cur, st) {
@@ -481,7 +456,7 @@
   }
   function renderReveal(id) {
     const s = dej(id), st = stav.stanoviste[id], dalsi = aktualni();
-    $("rNadpis").textContent = st.stav === "skipped" ? "Stanoviště " + id + " přeskočeno učitelem" : "Střípek " + id + " je váš!";
+    $("rNadpis").textContent = "Střípek " + id + " je váš!";
     $("rPismeno").textContent = s.pismeno;
     const k = $("rKlavesa"); k.style.animation = "none"; void k.offsetWidth; k.style.animation = "";
     $("rDalsi").hidden = !dalsi;
@@ -490,12 +465,6 @@
     const sym = CONFIG.SYMBOLY.find((x) => x.od === n), rs = $("rSymbol");
     rs.hidden = !sym;
     if (sym) { $("rSymDl").className = "dlazdice velka-dl " + sym.barva; $("rSymDl").innerHTML = SVG(sym.ikona); $("rSymNazev").textContent = sym.nazev; }
-    const rot = $("rRole");
-    if (dalsi && n % CONFIG.ROTACE_PO === 0) {
-      const b = blokRoli(n);
-      rot.hidden = false;
-      rot.innerHTML = "<h3>Vystřídejte role!</h3><p class=\"popis\">" + b.nadpis + "</p>" + b.html;
-    } else rot.hidden = true;
     $("btnPokracovat").textContent = dalsi ? "Do sbírky a dál" : "Složit obraz a do finále";
     $("pReveal").scrollTop = 0;
   }
@@ -507,7 +476,6 @@
     const chybi = jeZastupne(CONFIG.KONECNY_KOD) || CONFIG.ZAVERECNE_OTAZKY.some(jeZastupne);
     v.hidden = !chybi;
     v.textContent = "DOPLNIT: závěrečný kód zámku nebo závěrečné otázky nejsou v podkladu a v config.js jsou zástupné.";
-    $("btnObejit").hidden = !chybi;
     $("iKonec").value = ""; $("fChyba").hidden = true;
   }
   function renderDopis() {
@@ -520,7 +488,7 @@
   const STAV_TEXT = { locked: "čeká", unlocked: "odemčeno", solved: "splněno", skipped: "přeskočeno" };
   function renderCesta() {
     $("cPopis").textContent = "Splněno " + pocetHotovych() + " z " + pocet() + " stanovišť. Střípky můžete chytat v libovolném pořadí, navigace míří k nejbližšímu.";
-    const cur = cilNavigace(), el = $("cSeznam"); el.textContent = "";
+    const el = $("cSeznam"); el.textContent = "";
     for (let od = 1; od <= pocet(); od += CONFIG.ROTACE_PO) {
       const doo = Math.min(pocet(), od + CONFIG.ROTACE_PO - 1);
       const h = document.createElement("h2"); h.className = "sekce"; h.textContent = "Stanoviště " + od + "–" + doo;
@@ -529,9 +497,9 @@
         const s = dej(id), st = stav.stanoviste[id], r = document.createElement("div"); r.className = "rad";
         const dl = document.createElement("span"); dl.className = "cislo-dl";
         if (hotove(st)) { dl.classList.add(st.stav === "skipped" ? "pre" : "hotovo"); dl.innerHTML = SVG("ok"); }
-        else { dl.textContent = String(id); if (cur && cur.id === id) dl.classList.add("ted"); }
+        else dl.textContent = String(id);
         const t = document.createElement("div"); t.className = "rad-t";
-        t.innerHTML = "<b>Stanoviště " + id + "</b><small>" + (cur && cur.id === id && !hotove(st) ? (st.stav === "unlocked" ? "odemčeno" : "nejbližší") : STAV_TEXT[st.stav]) + "</small>";
+        t.innerHTML = "<b>Stanoviště " + id + "</b><small>" + STAV_TEXT[st.stav] + "</small>";
         r.append(dl, t);
         if (hotove(st)) { const p = document.createElement("span"); p.className = "pismeno-dl"; p.textContent = s.pismeno; r.appendChild(p); }
         g.appendChild(r);
@@ -540,35 +508,49 @@
     }
   }
   function renderTym() {
-    const b = blokRoli(pocetHotovych());
-    $("hRoleNadpis").textContent = b.nadpis; $("hRoleTelo").innerHTML = b.html;
-    const k = CONFIG.NOUZOVY_KONTAKT, a = $("hNouze");
-    $("hNouzeText").textContent = k.jmeno + (k.telefon ? " " + k.telefon : "");
-    if (k.telefon) a.href = "tel:" + k.telefon.replace(/\s+/g, ""); else a.removeAttribute("href");
+    $("iTymNazev").value = tym.nazev;
+    const el = $("tymClenove"); el.textContent = "";
+    if (!tym.clenove.length) { const r = document.createElement("div"); r.className = "rad"; r.innerHTML = '<div class="rad-t"><small>Zatím žádní členové.</small></div>'; el.appendChild(r); }
+    tym.clenove.forEach((jmeno, i) => {
+      const r = document.createElement("div"); r.className = "rad clen-radek";
+      const t = document.createElement("div"); t.className = "rad-t"; const b = document.createElement("b"); b.textContent = jmeno; t.appendChild(b);
+      const x = document.createElement("button"); x.type = "button"; x.className = "btn sek"; x.textContent = "Odebrat"; x.setAttribute("aria-label", "Odebrat " + jmeno);
+      x.addEventListener("click", () => { tym.clenove.splice(i, 1); ulozTym(); renderTym(); });
+      r.append(t, x); el.appendChild(r);
+    });
   }
 
   // ---------- události hráče ----------
-  $("btnZacit").addEventListener("click", () => {
+  function zacni() {
     if (!stav.zacatek) { stav.zacatek = Date.now(); uloz(); }
     spustGps(); spustKompas(true);
     ukaz("hra");
+  }
+  $("btnZacit").addEventListener("click", () => { // při startu se zeptáme na název týmu (jen pokud ještě není)
+    if (tym.nazev) return zacni();
+    $("btnZacit").hidden = true; $("fTymStart").hidden = false; $("iTymStart").focus();
   });
-  $("btnUcitel").addEventListener("click", () => ukaz("ucitel"));
+  $("fTymStart").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const n = $("iTymStart").value.trim();
+    if (!n) return;
+    tym.nazev = n; ulozTym(); zacni();
+  });
+  $("iTymNazev").addEventListener("input", () => { tym.nazev = $("iTymNazev").value.trim(); ulozTym(); });
+  $("fClen").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const j = $("iClen").value.trim();
+    if (!j) return;
+    tym.clenove.push(j); ulozTym(); $("iClen").value = ""; renderTym();
+  });
   $("btnDomu").addEventListener("click", () => ukaz("home"));
   $("logoNav").addEventListener("click", () => ukaz("home")); // postup se neresetuje, jen úvod
   $("logoHome").addEventListener("click", () => ukaz("home"));
   document.querySelectorAll(".tabbar button").forEach((b) => b.addEventListener("click", () => ukaz(b.dataset.tab)));
   $("btnKompas").addEventListener("click", () => spustKompas(true));
   $("btnGps").addEventListener("click", () => { gps.chyba = null; spustGps(); aktualizujHru(); });
-  $("btnBezGps").addEventListener("click", () => { $("fKod").hidden = false; $("iKod").focus(); });
   $("btnOtevritUkol").addEventListener("click", () => { sheetZavren = false; renderHra(); });
   $("btnChytit").addEventListener("click", () => { const id = +$("btnChytit").dataset.id; if (id) odemkni(id, "gps"); });
-  $("fKod").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const cur = cilNavigace();
-    if (cur && kodNorm($("iKod").value) === kodNorm(CONFIG.RUCNI_KOD)) { $("iKod").value = ""; odemkni(cur.id, "kod"); }
-    else { $("nKodChyba").hidden = false; vib(200); }
-  });
   $("btnNapoveda").addEventListener("click", () => {
     const akt = aktivni(); if (!akt) return;
     const st = stav.stanoviste[akt.id];
@@ -613,9 +595,6 @@
     if (kodNorm($("iKonec").value) === kodNorm(CONFIG.KONECNY_KOD)) dokonci();
     else $("fChyba").hidden = false;
   });
-  $("btnObejit").addEventListener("click", () => {
-    if (prompt("PIN učitele:") === CONFIG.PIN_UCITEL) dokonci();
-  });
   function dokonci() { stav.finale = true; stav.konec = Date.now(); uloz(); renderHra(); konfety(); vib([100, 50, 100, 50, 300]); }
   function konfety() {
     if (reduced()) return; // bez pohybu: jen statický dopis
@@ -638,147 +617,6 @@
     })();
   }
   $("btnKonfety").addEventListener("click", konfety);
-
-  $("btnDosah").addEventListener("click", () => { // dosah radaru: 150 → 400 → 800 → 150 m
-    const d = [150, 400, 800], i = d.indexOf(radarM());
-    lsSet("bojovka.radar", String(d[(i + 1) % d.length])); renderUcitel(); kresliRadar();
-  });
-
-  // ---------- učitel ----------
-  $("fPin").addEventListener("submit", (e) => {
-    e.preventDefault();
-    if ($("iPin").value === CONFIG.PIN_UCITEL) { sessionStorage.setItem("bojovka.ucitel", "1"); ukaz("ucitel"); }
-    else $("pinChyba").hidden = false;
-  });
-  const otevrene = new Set(), zpravy = {};
-  function nastavPolohou(s) {
-    const uloz2 = (lat, lng, acc) => {
-      if (acc > 20 && !confirm("Přesnost GPS je jen ±" + Math.round(acc) + " m (doporučeno do 20 m). Počkejte venku na zpřesnění. Přesto uložit?")) {
-        zpravy[s.id] = "Uložení zrušeno (přesnost ±" + Math.round(acc) + " m)."; return renderUcitel();
-      }
-      prepis[s.id] = { lat: lat, lng: lng, acc: acc, cas: Date.now() };
-      ulozPrepis();
-      zpravy[s.id] = "Uloženo: " + lat.toFixed(6) + ", " + lng.toFixed(6) + " (přesnost ±" + Math.round(acc) + " m)" + (acc > 20 ? ". POZOR: nepřesné." : ".");
-      renderUcitel();
-    };
-    if (gps.pos && Date.now() - gps.pos.t < 30000) return uloz2(gps.pos.lat, gps.pos.lng, gps.pos.acc); // čerstvá poloha z běžícího sledování
-    if (!navigator.geolocation) { zpravy[s.id] = "Toto zařízení nemá polohové služby."; return renderUcitel(); }
-    zpravy[s.id] = "Zjišťuji polohu…"; renderUcitel();
-    navigator.geolocation.getCurrentPosition((p) => uloz2(p.coords.latitude, p.coords.longitude, p.coords.accuracy),
-      (e) => { zpravy[s.id] = e.code === 1 ? "Poloha není povolena v prohlížeči." : "Polohu se nepodařilo zjistit, zkuste to venku."; renderUcitel(); },
-      { enableHighAccuracy: true, timeout: 25000, maximumAge: 0 });
-  }
-  function renderUcitel() {
-    const varov = [];
-    if (CONFIG.PIN_UCITEL === "0000") varov.push("PIN je výchozí 0000 – ZMĚNIT v config.js.");
-    if (CONFIG.RUCNI_KOD === "1717") varov.push("Ruční kód je výchozí 1717 – ZMĚNIT v config.js.");
-    if (jeZastupne(CONFIG.CAS_NAVRATU)) varov.push("Čas návratu není nastaven (DOPLNIT), odpočet jde od stisku Začít.");
-    if (jeZastupne(CONFIG.NOUZOVY_KONTAKT.jmeno)) varov.push("Nouzový kontakt není vyplněn (DOPLNIT).");
-    if (jeZastupne(CONFIG.KONECNY_KOD)) varov.push("Závěrečný kód zámku není nastaven (KOD_DOPLNIT).");
-    if (CONFIG.ZAVERECNE_OTAZKY.some(jeZastupne)) varov.push("Závěrečné otázky nejsou vyplněny (DOPLNIT).");
-    varov.push("Souřadnice (" + TRASA_VERZE + ") jsou NEOVĚŘENÉ v terénu.");
-    const v = $("uVarovani"); v.hidden = false; v.textContent = "";
-    const ul = document.createElement("ul");
-    varov.forEach((t) => { const li = document.createElement("li"); li.textContent = t; ul.appendChild(li); });
-    v.appendChild(ul);
-
-    $("dosahText").textContent = radarM() + " m (klepnutím změníte: 150 / 400 / 800)";
-    $("tZacatek").textContent = stav.zacatek ? new Date(stav.zacatek).toLocaleString("cs-CZ") : "ještě nezačalo";
-    const n = casNavratu();
-    $("tNavrat").textContent = n ? hm(n) : "–";
-    $("tZbyva").textContent = textZbyva();
-    const k = CONFIG.NOUZOVY_KONTAKT;
-    $("tKontakt").textContent = k.jmeno + (k.telefon ? " " + k.telefon : "");
-    $("tKod").textContent = CONFIG.RUCNI_KOD;
-
-    const cur = aktualni();
-    $("aInfo").textContent = cur ? "Doporučené: stanoviště " + cur.id + " (" + STAV_TEXT[stav.stanoviste[cur.id].stav] + "): " + cur.nazev : "Všech " + pocet() + " stanovišť je hotovo.";
-    $("btnUOdemknout").hidden = !cur || stav.stanoviste[cur.id].stav !== "locked";
-    $("btnUPreskocit").hidden = !cur;
-
-    const us = $("uSbirka"); us.textContent = "";
-    CONFIG.SYMBOLY.forEach((s) => {
-      const ok = symbolOdemcen(s), r = document.createElement("div"); r.className = "rad";
-      r.innerHTML = dlazdice(s, false, !ok) + '<div class="rad-t"><b>' + s.nazev + "</b><small>" + (ok ? "získáno" : "čeká na " + s.od + ". střípek") + "</small></div>";
-      us.appendChild(r);
-    });
-    const sez = $("uSeznam"); sez.textContent = "";
-    sts().forEach((s) => {
-      const st = stav.stanoviste[s.id];
-      const d = document.createElement("details"); d.className = "stanoviste-radek"; d.dataset.id = s.id;
-      d.open = otevrene.has(s.id);
-      d.addEventListener("toggle", () => { if (d.open) otevrene.add(s.id); else otevrene.delete(s.id); });
-      const sm = document.createElement("summary");
-      sm.textContent = s.id + ". " + s.nazev + " – " + STAV_TEXT[st.stav] + (hotove(st) ? " (" + s.pismeno + ")" : "") + (s.prepsano ? " [přepsáno]" : "");
-      const p = document.createElement("div"); p.className = "stanoviste-telo";
-      const orig = STANOVISTE.find((x) => x.id === s.id);
-      [
-        "Souřadnice: " + fmtSour(s) + (s.prepsano ? " (GPS ±" + Math.round(prepis[s.id].acc) + " m); původní " + fmtSour(orig) : " (jistota místa: " + s.jistota + ")"),
-        "Místo schránky: " + s.mistoPopis,
-        "Písmeno: " + s.pismeno + ", nápovědy použito: " + st.napovedi + ", chybných pokusů: " + st.pokusy,
-      ].forEach((r) => { const dv = document.createElement("div"); dv.textContent = r; p.appendChild(dv); });
-      const a = document.createElement("a"); a.href = "https://www.google.com/maps/search/?api=1&query=" + s.lat + "," + s.lng;
-      a.target = "_blank"; a.rel = "noopener"; a.textContent = "Otevřít v Mapách";
-      p.appendChild(a);
-      const b1 = document.createElement("button"); b1.type = "button"; b1.className = "btn sek"; b1.textContent = "Nastavit na moji aktuální polohu";
-      b1.addEventListener("click", () => { otevrene.add(s.id); nastavPolohou(s); });
-      p.appendChild(b1);
-      if (s.prepsano) {
-        const b2 = document.createElement("button"); b2.type = "button"; b2.className = "btn sek"; b2.textContent = "Vrátit původní souřadnice";
-        b2.addEventListener("click", () => { delete prepis[s.id]; ulozPrepis(); zpravy[s.id] = "Vráceno na původní souřadnice."; otevrene.add(s.id); renderUcitel(); });
-        p.appendChild(b2);
-      }
-      if (zpravy[s.id]) { const z = document.createElement("div"); z.className = "prepis-zprava"; z.textContent = zpravy[s.id]; z.setAttribute("role", "status"); p.appendChild(z); }
-      d.append(sm, p); sez.appendChild(d);
-    });
-  }
-  $("btnUOdemknout").addEventListener("click", () => { const c = aktualni(); if (c) odemkni(c.id, "ucitel"); });
-  $("btnUPreskocit").addEventListener("click", () => {
-    const c = aktualni();
-    if (!c || !confirm("Přeskočit stanoviště " + c.id + "? Písmeno " + c.pismeno + " se hráčům odhalí.")) return;
-    const st = stav.stanoviste[c.id]; st.stav = "skipped"; st.vyreseno = Date.now(); stav.reveal = c.id;
-    uloz(); renderUcitel();
-  });
-  $("btnReset").addEventListener("click", () => {
-    if (!confirm("Opravdu smazat postup hry na tomto telefonu?")) return;
-    stav = novyStav(); sheetZavren = false; uloz(); renderUcitel();
-  });
-  function stahni(text, jmeno) {
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(new Blob([text], { type: "application/json" }));
-    a.download = jmeno;
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
-  }
-  const razitko = () => { const d = new Date(); return d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + "-" + pad(d.getHours()) + pad(d.getMinutes()); };
-  $("btnExport").addEventListener("click", () => {
-    const data = {
-      aplikace: "Operace 17. listopad", verze: typeof APP_VERSION !== "undefined" ? APP_VERSION : null,
-      exportovano: new Date().toISOString(), zacatek: stav.zacatek ? new Date(stav.zacatek).toISOString() : null,
-      konec: stav.konec ? new Date(stav.konec).toISOString() : null, hotovo: pocetHotovych(),
-      stanoviste: sts().map((s) => {
-        const st = stav.stanoviste[s.id];
-        return { id: s.id, stav: st.stav, zpusobOdemceni: st.zpusob || null, napovedi: st.napovedi, chybnePokusy: st.pokusy,
-          odemceno: st.odemceno ? new Date(st.odemceno).toISOString() : null, vyreseno: st.vyreseno ? new Date(st.vyreseno).toISOString() : null };
-      }),
-    };
-    const text = JSON.stringify(data, null, 2);
-    $("uExport").hidden = false; $("uExport").value = text;
-    stahni(text, "bojovka-postup-" + razitko() + ".json");
-  });
-  // export souřadnic ve tvaru trasa.json (vloží se do bojovka-zdroj/trasa.json, pak build-data.py a bump)
-  $("btnExportSour").addEventListener("click", () => {
-    const data = {
-      verze: "prepis-" + razitko(),
-      poznamka: "Souřadnice upravené v aplikaci (GPS telefonu, učitelský režim)" + ". mistoPopis je zkrácený. Vložte do bojovka-zdroj/trasa.json a spusťte tools/build-data.py.",
-      stanoviste: sts().map((s) => ({ id: s.id, nazev: s.nazev, lat: +(+s.lat).toFixed(6), lng: +(+s.lng).toFixed(6), mistoPopis: s.mistoPopis,
-        zdroj: s.prepsano ? "GPS telefonu, přesnost ±" + Math.round(prepis[s.id].acc) + " m, " + new Date(prepis[s.id].cas).toISOString() : "trasa.json (beze změny)",
-        jistota: s.prepsano ? "vysoká (změřeno)" : s.jistota })),
-    };
-    const text = JSON.stringify(data, null, 2);
-    $("uExport").hidden = false; $("uExport").value = text;
-    stahni(text, "trasa-export-" + razitko() + ".json");
-  });
 
   // ---------- start ----------
   let p0 = "home";

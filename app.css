@@ -314,3 +314,18 @@ figure.symbol-foto { margin: -24px -24px 0; }
 .nav-logo { position: static; }
 .home .skola .logo-btn img { width: 52px; height: 52px; }
 .verze-radek { text-align: center; font-size: 13px; color: var(--label2); margin: 32px 0 0; }
+
+/* ---------- záhlaví Hra: čas a postup vpravo vedle nadpisu ---------- */
+.titul-radek .large { min-width: 0; }
+.stav-prava { margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; flex: none; font-size: 15px; font-weight: 600; line-height: 1.35; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.stav-prava #hStanoviste { font-weight: 500; color: var(--label2); }
+.stav-prava span:empty { display: none; }
+.kompas-karta + .skup { margin-top: 20px; }
+
+/* ---------- tým: název při startu a seznam členů ---------- */
+.tym-start { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+.tym-start label { color: #fff; font-weight: 600; text-align: center; }
+.tym-start input { color: #000; background: #fff; text-align: center; }
+.clen-radek { justify-content: space-between; }
+.clen-radek .btn { width: auto; min-height: 44px; padding: 8px 18px; font-size: 15px; }
+#tymClenove + .form-skup { margin-top: 16px; }
