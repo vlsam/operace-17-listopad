@@ -92,8 +92,8 @@ const STANOVISTE = [
  {
   "id": 6,
   "nazev": "Bod 6",
-  "lat": 48.8604881,
-  "lng": 17.1434067,
+  "lat": 48.8595833,
+  "lng": 17.1397661,
   "mistoPopis": "Souřadnice zadal uživatel. Přesné umístění schránky určí učitelka na místě.",
   "jistota": "zadáno uživatelem, neověřeno v terénu",
   "zadani": "Jak se nazývá systém, v němž občané mohou volit své zástupce a svobodně kritizovat vládu?",
@@ -126,8 +126,8 @@ const STANOVISTE = [
  {
   "id": 8,
   "nazev": "Bod 8",
-  "lat": 48.8534283,
-  "lng": 17.1358108,
+  "lat": 48.8535392,
+  "lng": 17.1351353,
   "mistoPopis": "Souřadnice zadal uživatel. Přesné umístění schránky určí učitelka na místě.",
   "jistota": "zadáno uživatelem, neověřeno v terénu",
   "zadani": "Doplňte křestní jméno studenta Opletala.",
@@ -143,8 +143,8 @@ const STANOVISTE = [
  {
   "id": 9,
   "nazev": "Bod 9",
-  "lat": 48.8508186,
-  "lng": 17.1332544,
+  "lat": 48.8509572,
+  "lng": 17.1336992,
   "mistoPopis": "Souřadnice zadal uživatel. Přesné umístění schránky určí učitelka na místě.",
   "jistota": "zadáno uživatelem, neověřeno v terénu",
   "zadani": "Jak se nazývá soubor zásad, který pomáhá rozlišovat odpovědné a neodpovědné jednání? Nápověda: začíná na E.",
@@ -318,8 +318,8 @@ const STANOVISTE = [
  {
   "id": 19,
   "nazev": "Bod 19",
-  "lat": 48.8595478,
-  "lng": 17.136165,
+  "lat": 48.8596186,
+  "lng": 17.1364939,
   "mistoPopis": "Souřadnice zadal uživatel. Přesné umístění schránky určí učitelka na místě.",
   "jistota": "zadáno uživatelem, neověřeno v terénu",
   "zadani": "Jak se nazývá organizované přerušení práce nebo studia na podporu požadavků?",

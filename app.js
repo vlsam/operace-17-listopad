@@ -179,9 +179,14 @@
     const D = window.DeviceOrientationEvent;
     if (!D || gps.kompasBezi) return;
     const h = (e) => {
-      let v = null;
-      if (typeof e.webkitCompassHeading === "number") v = e.webkitCompassHeading;
-      else if (e.absolute && e.alpha !== null && e.alpha !== undefined) v = (360 - e.alpha) % 360;
+      let v = null, vyzva = "";
+      if (typeof e.webkitCompassHeading === "number") { // iOS: kompas spolehlivý jen zhruba naplocho
+        const p = e.webkitCompassHeadingAccuracy;
+        if (Math.abs(e.beta) > 60) vyzva = "Drž telefon naplocho"; // heading se nemění, zůstane poslední dobrý
+        else { v = e.webkitCompassHeading; if (p < 0 || p > 25) vyzva = "Kompas je nepřesný – opiš telefonem ve vzduchu osmičku"; }
+      } else if (e.absolute && e.alpha !== null && e.alpha !== undefined) v = (360 - e.alpha) % 360;
+      const k = $("nKompas");
+      if (k.textContent !== vyzva) { k.textContent = vyzva; k.hidden = !vyzva; }
       if (v !== null) { gps.heading = v; planujKresleni(); }
     };
     const pripoj = () => {
@@ -232,11 +237,15 @@
     return nej.s;
   }
   function nastavCil(s) { $("nSour").textContent = fmtSour(s); } // název ani číslo cíle se hráči neukazuje
+  let sipkaUhel = null;
   function aktualizujSipku() {
     const cil = cilNavigace();
     if (pohled !== "hra" || !cil || !gps.pos) return;
     const az = azimut(gps.pos, cil);
-    $("nSipka").style.transform = "rotate(" + (az - (gps.heading || 0)) + "deg)"; // šipka míří nahoru = 0°
+    const u = az - (gps.heading || 0); // šipka míří nahoru = 0°
+    // spojitý úhel: přičte se nejkratší rozdíl, jinak CSS transition při přechodu přes sever (5° → 355°) točí dlouhou cestou
+    sipkaUhel = sipkaUhel === null ? u : sipkaUhel + (((u - sipkaUhel) % 360) + 540) % 360 - 180;
+    $("nSipka").style.transform = "rotate(" + sipkaUhel + "deg)";
     $("nSmer").textContent = "Směr: " + strany(az) + " (" + Math.round(az) + "°)" +
       (gps.heading === null ? ". Bez kompasu: nahoře = sever." : "");
   }
