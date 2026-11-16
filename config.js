@@ -13,7 +13,7 @@ const CONFIG = {
   DELKA_MIN: 100, // 100 minut (1 h 40 min)
 
   // Závěrečný číselný kód zámku truhly. V podkladu CHYBÍ, doplnit při přípravě hry a ověřit.
-  KONECNY_KOD: "KOD_DOPLNIT",
+  KONECNY_KOD: "1709",
 
   // Čtyři závěrečné otázky z podkladu. V podkladu CHYBÍ, doplnit.
   ZAVERECNE_OTAZKY: [
