@@ -12,15 +12,15 @@ const CONFIG = {
   CAS_NAVRATU: "DOPLNIT",
   DELKA_MIN: 100, // 100 minut (1 h 40 min)
 
-  // Závěrečný číselný kód zámku truhly. V podkladu CHYBÍ, doplnit při přípravě hry a ověřit.
+  // Závěrečný číselný kód zámku truhly = odpovědi na ZAVERECNE_OTAZKY v pořadí (7, 3, 5, 9). Zámek nastavit na stejný kód.
   KONECNY_KOD: "7359",
 
-  // Čtyři závěrečné otázky z podkladu. V podkladu CHYBÍ, doplnit.
+  // Každá odpověď je jedna číslice kódu; vše se vyčte z poselství SVOBODA JE ODPOVĚDNOST.
   ZAVERECNE_OTAZKY: [
-    "OTÁZKA 1 – Kolik písmen má první slovo vašeho poselství?",
-    "OTÁZKA 2 – Kolik slov má celé poselství?",
-    "OTÁZKA 3 – Kolikrát se v poselství objeví písmeno O?",
-    "OTÁZKA 4 – Jakou číslicí končí rok sametové revoluce?",
+    "Kolik písmen má první slovo vašeho poselství?",
+    "Kolik slov má celé poselství?",
+    "Kolikrát se v poselství objeví písmeno O?",
+    "Jakou číslicí končí rok sametové revoluce?",
   ],
 
   // Stanoviště se v Cestě řadí do skupin po ROTACE_PO; karta symbolu se odemkne po každém ROTACE_PO-tém střípku.
