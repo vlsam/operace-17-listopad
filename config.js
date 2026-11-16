@@ -13,14 +13,14 @@ const CONFIG = {
   DELKA_MIN: 100, // 100 minut (1 h 40 min)
 
   // Závěrečný číselný kód zámku truhly. V podkladu CHYBÍ, doplnit při přípravě hry a ověřit.
-  KONECNY_KOD: "1709",
+  KONECNY_KOD: "7359",
 
   // Čtyři závěrečné otázky z podkladu. V podkladu CHYBÍ, doplnit.
   ZAVERECNE_OTAZKY: [
-    "OTÁZKA 1 – DOPLNIT",
-    "OTÁZKA 2 – DOPLNIT",
-    "OTÁZKA 3 – DOPLNIT",
-    "OTÁZKA 4 – DOPLNIT",
+    "OTÁZKA 1 – Kolik písmen má první slovo vašeho poselství?",
+    "OTÁZKA 2 – Kolik slov má celé poselství?",
+    "OTÁZKA 3 – Kolikrát se v poselství objeví písmeno O?",
+    "OTÁZKA 4 – Jakou číslicí končí rok sametové revoluce?",
   ],
 
   // Stanoviště se v Cestě řadí do skupin po ROTACE_PO; karta symbolu se odemkne po každém ROTACE_PO-tém střípku.
